@@ -64,6 +64,7 @@ src/
 
 ### Archivos de Configuración
 
+**En la raíz del proyecto:**
 - **`package.json`** - Dependencias y scripts
 - **`vite.config.js`** - Configuración de Vite con PWA
 - **`jsconfig.json`** - Configuración de JavaScript y path mapping
@@ -71,6 +72,12 @@ src/
 - **`.eslintrc.js`** - Configuración de ESLint
 - **`.prettierrc`** - Configuración de Prettier
 - **`vitest.config.js`** - Configuración de testing
+- **`index.html`** - HTML principal de la aplicación
+
+**En `src/`:**
+- **`main.jsx`** - Punto de entrada de React
+- **`App.jsx`** - Componente principal con routing
+- **`styles/globals.css`** - Estilos globales con Tailwind
 
 ### Variables de Entorno
 

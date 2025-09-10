@@ -5,6 +5,7 @@ import AdventureTest from '@components/ui/AdventureTest/AdventureTest'
 import AdventureDisplay from '@components/ui/AdventureDisplay/AdventureDisplay'
 import ChatInterface from '@components/ui/ChatInterface/ChatInterface'
 import GamificationPanel from '@components/ui/GamificationPanel/GamificationPanel'
+import BackendTest from '@components/ui/BackendTest/BackendTest'
 import { startAdventure } from '@services/api/adventure'
 import { askQuestion } from '@services/api/qa'
 
@@ -89,14 +90,9 @@ function App() {
             </p>
           </div>
 
-          {/* Sección de Verificación del Backend */}
-          <div className="max-w-md mx-auto mb-8 sm:mb-12">
-            <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-6 sm:p-8">
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4 text-center">
-                🔍 Estado del Backend
-              </h2>
-              <HealthCheck />
-            </div>
+          {/* Sección de Pruebas del Backend */}
+          <div className="max-w-6xl mx-auto mb-8 sm:mb-12">
+            <BackendTest />
           </div>
 
           {/* Sección de Ubicación */}

@@ -34,7 +34,18 @@ export const apiRequest = async (endpoint, method = 'GET', data = null) => {
 
     // Si la respuesta no es OK (código 2xx), lanzamos un error
     if (!response.ok) {
-      throw new Error(responseData.detail || `Error del servidor: ${response.status}`)
+      // Manejar diferentes tipos de errores del servidor
+      let errorMessage = `Error del servidor: ${response.status}`
+      
+      if (responseData.detail) {
+        errorMessage = responseData.detail
+      } else if (responseData.message) {
+        errorMessage = responseData.message
+      } else if (responseData.error) {
+        errorMessage = responseData.error
+      }
+      
+      throw new Error(errorMessage)
     }
 
     // Si todo va bien, devolvemos los datos

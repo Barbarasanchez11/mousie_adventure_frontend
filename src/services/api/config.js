@@ -53,6 +53,6 @@ export const apiRequest = async (endpoint, method = 'GET', data = null) => {
   } catch (error) {
     // Capturamos cualquier error de red o del servidor
     console.error('Error en la petición:', error)
-    return { success: false, message: error.message || 'Error de conexión con el servidor' }
+    throw error // Lanzar el error para que sea capturado por el catch de las funciones que llaman a apiRequest
   }
 }

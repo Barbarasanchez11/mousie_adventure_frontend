@@ -193,8 +193,15 @@ const InteractiveMap = ({
                 mouseout: () => setHoveredPlace(null)
               }}
             >
-            <Popup maxWidth={300} className="custom-popup">
-              <div className="p-4 min-w-[280px]">
+            <Popup maxWidth={300} maxHeight={400} className="custom-popup">
+              <div className="p-4 min-w-[280px] max-h-[350px] overflow-y-auto relative">
+                {/* Indicador de scroll */}
+                <div className="absolute top-2 right-2 text-xs text-gray-400 bg-white/80 rounded-full px-2 py-1 shadow-sm z-10">
+                  📜 Scroll
+                </div>
+                
+                {/* Gradiente inferior para indicar más contenido */}
+                <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-white to-transparent pointer-events-none z-10"></div>
                 {/* Header del popup */}
                 <div className="flex items-center gap-3 mb-3">
                   <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold text-lg">
@@ -261,7 +268,7 @@ const InteractiveMap = ({
                 )}
 
                 {/* Botón de acción */}
-                <div className="flex gap-2 pt-2 border-t border-gray-200">
+                <div className="flex gap-2 pt-2 border-t border-gray-200 pb-2">
                   <button
                     onClick={() => {
                       if (onPlaceSelect) {

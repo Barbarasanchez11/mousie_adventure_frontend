@@ -77,7 +77,7 @@
   
   /* Custom popup styles for Leaflet */
   .custom-popup .leaflet-popup-content-wrapper {
-    @apply rounded-xl shadow-2xl border-0 p-0;
+    @apply rounded-xl shadow-2xl border-0 p-0 overflow-hidden;
   }
   
   .custom-popup .leaflet-popup-content {
@@ -90,6 +90,24 @@
   
   .custom-popup .leaflet-popup-close-button {
     @apply text-gray-400 hover:text-gray-600 text-lg font-bold;
+  }
+  
+  /* Scroll personalizado para popups */
+  .custom-popup .overflow-y-auto {
+    scrollbar-width: thin;
+    scrollbar-color: #8B5CF6 #F3F4F6;
+  }
+  
+  .custom-popup .overflow-y-auto::-webkit-scrollbar {
+    @apply w-2;
+  }
+  
+  .custom-popup .overflow-y-auto::-webkit-scrollbar-track {
+    @apply bg-gray-100 rounded-full;
+  }
+  
+  .custom-popup .overflow-y-auto::-webkit-scrollbar-thumb {
+    @apply bg-purple-400 rounded-full hover:bg-purple-500;
   }
   
   /* Animation classes */

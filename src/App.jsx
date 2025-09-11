@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import HealthCheck from '@components/ui/HealthCheck/HealthCheck'
-import AdventureTest from '@components/ui/AdventureTest/AdventureTest'
 import AdventureDisplay from '@components/ui/AdventureDisplay/AdventureDisplay'
 import ChatInterface from '@components/ui/ChatInterface/ChatInterface'
 import GamificationPanel from '@components/ui/GamificationPanel/GamificationPanel'
@@ -90,15 +89,6 @@ function App() {
           </div>
 
 
-          {/* Sección de Prueba de Aventuras */}
-          <div className="max-w-md mx-auto mb-8 sm:mb-12">
-            <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-6 sm:p-8">
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4 text-center">
-                🧪 Probar Aventura
-              </h2>
-              <AdventureTest />
-            </div>
-          </div>
 
           {/* Sección de Aventura Actual */}
           {adventure && (

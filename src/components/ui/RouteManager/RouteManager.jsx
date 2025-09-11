@@ -265,40 +265,6 @@ const RouteManager = () => {
         </div>
       )}
 
-      {/* Información de la ruta */}
-      {route && (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-            <h3 className="font-semibold text-blue-800 mb-2">📊 Información de la Ruta</h3>
-            <div className="space-y-1 text-sm">
-              <p><strong>ID:</strong> {route.route_id}</p>
-              <p><strong>Lugares:</strong> {route.total_places}</p>
-              <p><strong>Duración:</strong> {route.estimated_duration}</p>
-              <p><strong>Dificultad:</strong> {route.difficulty}</p>
-            </div>
-          </div>
-
-          <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-            <h3 className="font-semibold text-green-800 mb-2">🎯 Objetivos</h3>
-            <div className="space-y-1 text-sm">
-              <p>• Completar {route.total_places} desafíos</p>
-              <p>• Explorar lugares históricos</p>
-              <p>• Ganar puntos y recompensas</p>
-              <p>• Aprender sobre Madrid</p>
-            </div>
-          </div>
-
-          <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
-            <h3 className="font-semibold text-purple-800 mb-2">🏆 Recompensas</h3>
-            <div className="space-y-1 text-sm">
-              <p>• Puntos por completar desafíos</p>
-              <p>• Monedas mágicas</p>
-              <p>• Logros especiales</p>
-              <p>• Conocimiento sobre Madrid</p>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Lista de lugares */}
       {route?.places && route.places.length > 0 && (

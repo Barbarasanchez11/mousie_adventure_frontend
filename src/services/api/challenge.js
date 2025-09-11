@@ -45,7 +45,9 @@ class ChallengeService {
               rewards: this.generateRewards(placeName),
               story: response.data.story || '',
               curiosity: response.data.curiosity || '',
-              reward: response.data.reward || ''
+              reward: response.data.reward || '',
+              next_place: response.data.next_place || '',
+              business_offer: response.data.business_offer || ''
             }
           }
         }
@@ -60,19 +62,21 @@ class ChallengeService {
         console.log(`✅ Desafío generado desde adventure/test para ${placeName}:`, testResponse.data)
         return {
           success: true,
-          data: {
-            challenge: testResponse.data.challenge || 'Desafío mágico del Ratoncito Pérez',
-            place_name: placeName,
-            children_ages: childrenAges,
-            has_real_data: false,
-            challenge_source: 'test_api',
-            difficulty: this.calculateDifficulty(childrenAges),
-            estimated_time: this.calculateEstimatedTime(childrenAges),
-            rewards: this.generateRewards(placeName),
-            story: testResponse.data.story || '',
-            curiosity: testResponse.data.curiosity || '',
-            reward: testResponse.data.reward || ''
-          }
+            data: {
+              challenge: testResponse.data.challenge || 'Desafío mágico del Ratoncito Pérez',
+              place_name: placeName,
+              children_ages: childrenAges,
+              has_real_data: false,
+              challenge_source: 'test_api',
+              difficulty: this.calculateDifficulty(childrenAges),
+              estimated_time: this.calculateEstimatedTime(childrenAges),
+              rewards: this.generateRewards(placeName),
+              story: testResponse.data.story || '',
+              curiosity: testResponse.data.curiosity || '',
+              reward: testResponse.data.reward || '',
+              next_place: testResponse.data.next_place || '',
+              business_offer: testResponse.data.business_offer || ''
+            }
         }
       } else {
         throw new Error(testResponse.message || 'Error generando desafío')

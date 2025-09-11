@@ -174,6 +174,66 @@ const ChallengeModal = ({
                 </div>
               </div>
 
+              {/* Story from Backend */}
+              {challenge.story && (
+                <div className="bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-xl p-4">
+                  <div className="flex items-start gap-3">
+                    <span className="text-2xl">🐭</span>
+                    <div className="flex-1">
+                      <h3 className="font-bold text-gray-800 mb-2">Historia del Ratoncito Pérez</h3>
+                      <p className="text-gray-700 text-sm leading-relaxed">
+                        {challenge.story}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Reward Preview */}
+              {challenge.reward && (
+                <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl p-4">
+                  <div className="flex items-start gap-3">
+                    <span className="text-2xl">🏆</span>
+                    <div className="flex-1">
+                      <h3 className="font-bold text-gray-800 mb-2">Recompensa</h3>
+                      <p className="text-gray-700 text-sm leading-relaxed">
+                        {challenge.reward}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Next Place */}
+              {challenge.next_place && (
+                <div className="bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-200 rounded-xl p-4">
+                  <div className="flex items-start gap-3">
+                    <span className="text-2xl">🗺️</span>
+                    <div className="flex-1">
+                      <h3 className="font-bold text-gray-800 mb-2">Siguiente Parada</h3>
+                      <p className="text-gray-700 text-sm leading-relaxed">
+                        Después de completar este desafío, tu próxima aventura será en: <strong>{challenge.next_place}</strong>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Business Offer */}
+              {challenge.business_offer && (
+                <div className="bg-gradient-to-r from-orange-50 to-red-50 border border-orange-200 rounded-xl p-4">
+                  <div className="flex items-start gap-3">
+                    <span className="text-2xl">🛍️</span>
+                    <div className="flex-1">
+                      <h3 className="font-bold text-gray-800 mb-2">Oferta Especial</h3>
+                      <p className="text-gray-700 text-sm leading-relaxed">
+                        {challenge.business_offer}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* Challenge Details */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="bg-blue-50 rounded-lg p-3">

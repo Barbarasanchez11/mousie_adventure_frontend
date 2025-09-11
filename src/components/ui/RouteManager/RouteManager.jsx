@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import InteractiveMap from '@components/ui/InteractiveMap/InteractiveMap'
+import RouteSelector from '@components/ui/RouteSelector/RouteSelector'
 import { generateRoute } from '@services/api/route'
 import { guideService } from '@services/api/guide'
 import { getMadridPlacesForMap, getMadridRoutesForMap, MADRID_PLACES } from '@data/madridPlaces'
@@ -13,6 +14,7 @@ const RouteManager = () => {
   const [error, setError] = useState(null)
   const [completedPlaces, setCompletedPlaces] = useState(new Set()) // Lugares completados
   const [currentPlaceIndex, setCurrentPlaceIndex] = useState(0) // Lugar actual
+  const [showRouteSelector, setShowRouteSelector] = useState(true) // Mostrar selector de rutas
   
   // Hook para obtener la ubicación del usuario
   const { location, loading: locationLoading, error: locationError } = useGeolocation()
@@ -66,6 +68,15 @@ const RouteManager = () => {
     setSelectedPlace(place)
   }
 
+  // Manejar selección de ruta desde el selector
+  const handleRouteSelect = (selectedRoute) => {
+    setRoute(selectedRoute)
+    setShowRouteSelector(false)
+    setSelectedPlace(null)
+    setCompletedPlaces(new Set())
+    setCurrentPlaceIndex(0)
+  }
+
   // Marcar un lugar como completado
   const handleCompletePlace = (placeIndex) => {
     setCompletedPlaces(prev => new Set([...prev, placeIndex]))
@@ -109,16 +120,34 @@ const RouteManager = () => {
   }, [])
 
   return (
-    <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-6">
-      {/* Header */}
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold text-gray-800 mb-2">
-          🗺️ Gestor de Rutas del Ratoncito Pérez
-        </h2>
-        <p className="text-gray-600">
-          Explora los lugares mágicos de Madrid donde el Ratoncito Pérez tiene aventuras preparadas
-        </p>
-      </div>
+    <div className="space-y-6">
+      {/* Selector de Rutas */}
+      {showRouteSelector && (
+        <RouteSelector
+          onRouteSelect={handleRouteSelect}
+          userLocation={location}
+          childrenAges={[5, 8]}
+        />
+      )}
+
+      {/* Mapa y Ruta */}
+      {route && !showRouteSelector && (
+        <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-6 sm:p-8">
+          {/* Header */}
+          <div className="text-center mb-6">
+            <h2 className="text-2xl font-bold text-gray-800 mb-2">
+              🗺️ {route.name || 'Ruta de Aventura en Madrid'}
+            </h2>
+            <p className="text-gray-600">
+              {route.description || 'Explora los lugares más mágicos de Madrid con el Ratoncito Pérez'}
+            </p>
+            <button
+              onClick={() => setShowRouteSelector(true)}
+              className="mt-2 text-sm text-purple-600 hover:text-purple-800 underline"
+            >
+              🔄 Cambiar ruta
+            </button>
+          </div>
 
       {/* Controles */}
       <div className="mb-6 flex flex-wrap gap-4 items-center">
@@ -433,13 +462,15 @@ const RouteManager = () => {
         </div>
       )}
 
-      {/* Error */}
-      {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-          <div className="flex items-center gap-2">
-            <span className="text-red-500">⚠️</span>
-            <p className="text-red-700">{error}</p>
-          </div>
+          {/* Error */}
+          {error && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+              <div className="flex items-center gap-2">
+                <span className="text-red-500">⚠️</span>
+                <p className="text-red-700">{error}</p>
+              </div>
+            </div>
+          )}
         </div>
       )}
     </div>

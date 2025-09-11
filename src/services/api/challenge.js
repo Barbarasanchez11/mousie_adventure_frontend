@@ -1,4 +1,5 @@
 import { apiRequest } from './config.js'
+import { storyService } from './story.js'
 
 /**
  * Servicio para manejar desafíos del Ratoncito Pérez
@@ -20,66 +21,42 @@ class ChallengeService {
     try {
       console.log(`🎯 Generando desafío para ${placeName} con edades ${childrenAges}`)
       
-      // Primero intentar con el endpoint de aventura
-      try {
-        const requestData = {
-          latitude: placeData?.latitude || 40.4168,
-          longitude: placeData?.longitude || -3.7038,
-          children_ages: childrenAges
-        }
-
-        const response = await apiRequest('adventure/start', 'POST', requestData)
-        
-        if (response.success) {
-          console.log(`✅ Desafío generado desde adventure/start para ${placeName}:`, response.data)
-          return {
-            success: true,
-            data: {
-              challenge: response.data.challenge || 'Desafío mágico del Ratoncito Pérez',
-              place_name: placeName,
-              children_ages: childrenAges,
-              has_real_data: response.data.has_real_data || false,
-              challenge_source: 'adventure_api',
-              difficulty: this.calculateDifficulty(childrenAges),
-              estimated_time: this.calculateEstimatedTime(childrenAges),
-              rewards: this.generateRewards(placeName),
-              story: response.data.story || '',
-              curiosity: response.data.curiosity || '',
-              reward: response.data.reward || '',
-              next_place: response.data.next_place || '',
-              business_offer: response.data.business_offer || ''
-            }
-          }
-        }
-      } catch (adventureError) {
-        console.log('⚠️ Adventure/start falló, intentando con test endpoint')
+      // Usar el servicio de historias para obtener datos reales del backend
+      const coordinates = {
+        latitude: placeData?.latitude || 40.4168,
+        longitude: placeData?.longitude || -3.7038
       }
 
-      // Si falla, usar el endpoint de test
-      const testResponse = await apiRequest('adventure/test', 'GET')
-      
-      if (testResponse.success) {
-        console.log(`✅ Desafío generado desde adventure/test para ${placeName}:`, testResponse.data)
-        return {
-          success: true,
-            data: {
-              challenge: testResponse.data.challenge || 'Desafío mágico del Ratoncito Pérez',
-              place_name: placeName,
-              children_ages: childrenAges,
-              has_real_data: false,
-              challenge_source: 'test_api',
-              difficulty: this.calculateDifficulty(childrenAges),
-              estimated_time: this.calculateEstimatedTime(childrenAges),
-              rewards: this.generateRewards(placeName),
-              story: testResponse.data.story || '',
-              curiosity: testResponse.data.curiosity || '',
-              reward: testResponse.data.reward || '',
-              next_place: testResponse.data.next_place || '',
-              business_offer: testResponse.data.business_offer || ''
-            }
+      // Obtener historia, curiosidad y desafío del backend
+      const [storyResult, curiosityResult, challengeResult] = await Promise.all([
+        storyService.getStory(placeName, childrenAges, coordinates),
+        storyService.getCuriosity(placeName, childrenAges, coordinates),
+        storyService.getChallenge(placeName, childrenAges, coordinates)
+      ])
+
+      console.log(`✅ Datos obtenidos del backend para ${placeName}:`, {
+        story: storyResult.success,
+        curiosity: curiosityResult.success,
+        challenge: challengeResult.success
+      })
+
+      return {
+        success: true,
+        data: {
+          challenge: challengeResult.data.challenge || 'Desafío mágico del Ratoncito Pérez',
+          place_name: placeName,
+          children_ages: childrenAges,
+          has_real_data: storyResult.data.has_real_data || curiosityResult.data.has_real_data || challengeResult.data.has_real_data,
+          challenge_source: 'backend_qa_api',
+          difficulty: this.calculateDifficulty(childrenAges),
+          estimated_time: this.calculateEstimatedTime(childrenAges),
+          rewards: this.generateRewards(placeName),
+          story: storyResult.data.story || '',
+          curiosity: curiosityResult.data.curiosity || '',
+          reward: this.generateRewardText(placeName),
+          next_place: this.getNextPlace(placeName),
+          business_offer: this.generateBusinessOffer(placeName)
         }
-      } else {
-        throw new Error(testResponse.message || 'Error generando desafío')
       }
     } catch (error) {
       console.error('Error generando desafío:', error)
@@ -329,6 +306,60 @@ class ChallengeService {
 
     const specificRewards = placeSpecificRewards[placeName] || []
     return [...baseRewards, ...specificRewards].slice(0, 3)
+  }
+
+  /**
+   * Generar texto de recompensa
+   * @param {string} placeName - Nombre del lugar
+   * @returns {string} - Texto de recompensa
+   */
+  generateRewardText(placeName) {
+    const rewards = {
+      'Plaza Mayor': '¡Excelente! Has ganado 25 puntos y 3 monedas mágicas por completar este desafío en Plaza Mayor.',
+      'Puerta del Sol': '¡Fantástico! Has obtenido 30 puntos y una estrella brillante del Ratoncito Pérez.',
+      'Palacio Real': '¡Magnífico! Has conseguido 35 puntos y una corona real por tu valentía.',
+      'Parque del Retiro': '¡Increíble! Has ganado 20 puntos y una hoja mágica del parque más hermoso de Madrid.',
+      'Museo del Prado': '¡Maravilloso! Has obtenido 40 puntos y un pincel mágico para crear arte.',
+      'Mercado de San Miguel': '¡Delicioso! Has conseguido 15 puntos y un pincho mágico con sabor especial.'
+    }
+
+    return rewards[placeName] || `¡Excelente trabajo! Has ganado puntos mágicos y tesoros especiales por explorar ${placeName}.`
+  }
+
+  /**
+   * Obtener el siguiente lugar en la ruta
+   * @param {string} placeName - Nombre del lugar actual
+   * @returns {string} - Siguiente lugar
+   */
+  getNextPlace(placeName) {
+    const nextPlaces = {
+      'Plaza Mayor': 'Palacio Real',
+      'Puerta del Sol': 'Plaza Mayor',
+      'Palacio Real': 'Parque del Retiro',
+      'Parque del Retiro': 'Museo del Prado',
+      'Museo del Prado': 'Mercado de San Miguel',
+      'Mercado de San Miguel': 'Puerta del Sol'
+    }
+
+    return nextPlaces[placeName] || 'Tu próxima aventura te espera'
+  }
+
+  /**
+   * Generar oferta de negocio
+   * @param {string} placeName - Nombre del lugar
+   * @returns {string} - Oferta de negocio
+   */
+  generateBusinessOffer(placeName) {
+    const offers = {
+      'Plaza Mayor': '¡Visita la tienda de souvenirs cerca de Plaza Mayor y obtén un 10% de descuento!',
+      'Puerta del Sol': '¡Prueba los churros más famosos de Madrid cerca de Puerta del Sol!',
+      'Palacio Real': '¡Disfruta de un café con vistas al Palacio Real en la cafetería de enfrente!',
+      'Parque del Retiro': '¡Alquila una barca en el estanque del Retiro por solo 6€!',
+      'Museo del Prado': '¡Visita la tienda del museo y llévate un recuerdo artístico!',
+      'Mercado de San Miguel': '¡Prueba los pinchos más deliciosos del mercado con descuento especial!'
+    }
+
+    return offers[placeName] || `¡Descubre las ofertas especiales cerca de ${placeName}!`
   }
 
   /**

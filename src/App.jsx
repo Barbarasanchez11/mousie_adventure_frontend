@@ -71,10 +71,6 @@ function App() {
             </div>
           </div>
 
-          {/* Status */}
-          <div className="text-xs sm:text-sm text-gray-500 bg-gray-50 rounded-lg px-4 py-2 inline-block">
-            <p>🚀 Aplicación Completa - Todas las funcionalidades integradas</p>
-          </div>
         </div>
       </div>
     </div>

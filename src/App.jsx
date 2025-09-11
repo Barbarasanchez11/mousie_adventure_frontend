@@ -1,12 +1,10 @@
 import React, { useState } from 'react'
 import HealthCheck from '@components/ui/HealthCheck/HealthCheck'
 import AdventureDisplay from '@components/ui/AdventureDisplay/AdventureDisplay'
-import ChatInterface from '@components/ui/ChatInterface/ChatInterface'
 import GamificationPanel from '@components/ui/GamificationPanel/GamificationPanel'
 import RouteManager from '@components/ui/RouteManager/RouteManager'
 import InteractiveMap from '@components/ui/InteractiveMap/InteractiveMap'
 import { startAdventure } from '@services/api/adventure'
-import { askQuestion } from '@services/api/qa'
 
 function App() {
   // Estados para aventuras
@@ -14,45 +12,8 @@ function App() {
   const [adventureLoading, setAdventureLoading] = useState(false)
   const [adventureError, setAdventureError] = useState(null)
 
-  // Estados para chat
-  const [messages, setMessages] = useState([
-    { id: 1, text: '¡Hola! Soy el Ratoncito Pérez. ¿En qué puedo ayudarte?', sender: 'bot', timestamp: new Date() },
-  ])
-  const [chatLoading, setChatLoading] = useState(false)
-  const [chatError, setChatError] = useState(null)
 
 
-  // Función para enviar una pregunta al Ratoncito Pérez
-  const handleSendMessage = async (question) => {
-    const newMessage = { id: messages.length + 1, text: question, sender: 'user', timestamp: new Date() }
-    setMessages((prevMessages) => [...prevMessages, newMessage])
-    setChatLoading(true)
-    setChatError(null)
-
-    try {
-      const response = await askQuestion(question)
-      if (response.success) {
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          { id: prevMessages.length + 1, text: response.data.answer, sender: 'bot', timestamp: new Date() },
-        ])
-      } else {
-        setChatError(response.message)
-        setMessages((prevMessages) => [
-          ...prevMessages,
-          { id: prevMessages.length + 1, text: `Error: ${response.message}`, sender: 'bot', timestamp: new Date(), isError: true },
-        ])
-      }
-    } catch (error) {
-      setChatError('Error al conectar con el Ratoncito Pérez.')
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        { id: prevMessages.length + 1, text: 'Error al conectar con el Ratoncito Pérez.', sender: 'bot', timestamp: new Date(), isError: true },
-      ])
-    } finally {
-      setChatLoading(false)
-    }
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50">
@@ -102,20 +63,6 @@ function App() {
             </div>
           )}
 
-          {/* Sección de Chat */}
-          <div className="max-w-2xl mx-auto mb-8 sm:mb-12">
-            <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-6 sm:p-8">
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4 text-center">
-                💬 Pregunta al Ratoncito Pérez
-              </h2>
-              <ChatInterface
-                messages={messages}
-                onSendMessage={handleSendMessage}
-                loading={chatLoading}
-                error={chatError}
-              />
-            </div>
-          </div>
 
           {/* Sección de Gamificación */}
           <div className="max-w-4xl mx-auto mb-8 sm:mb-12">

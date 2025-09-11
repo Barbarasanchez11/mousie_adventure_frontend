@@ -160,7 +160,6 @@ const RouteSelector = ({ onRouteSelect, userLocation, childrenAges = [5, 8] }) =
                 </div>
                 <div>
                   <h4 className="font-semibold text-gray-800">{route.name}</h4>
-                  <p className="text-sm text-gray-600">{route.places.length} lugares</p>
                 </div>
               </div>
               <p className="text-sm text-gray-700 mb-3">{route.description}</p>
@@ -196,7 +195,6 @@ const RouteSelector = ({ onRouteSelect, userLocation, childrenAges = [5, 8] }) =
             </div>
             <div>
               <h4 className="font-semibold text-gray-800">Ruta Clásica de Madrid</h4>
-              <p className="text-sm text-gray-600">Lugares emblemáticos tradicionales</p>
             </div>
           </div>
           <p className="text-sm text-gray-700 mb-4">

@@ -25,7 +25,7 @@ const RouteManager = () => {
         longitude: -3.7038
       }
 
-      const response = await generateRoute(startLocation, [5, 8]) // Edades de ejemplo
+      const response = await generateRoute(startLocation.latitude, startLocation.longitude, [5, 8]) // Edades de ejemplo
       
       if (response.success) {
         setRoute(response.data)

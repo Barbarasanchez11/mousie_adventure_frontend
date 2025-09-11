@@ -112,18 +112,12 @@ VITE_DEFAULT_ZOOM=13
    npm install
    ```
 
-3. **Configurar variables de entorno**
-   ```bash
-   cp env.example .env
-   # Editar .env con tus configuraciones
-   ```
-
-4. **Iniciar servidor de desarrollo**
+3. **Iniciar servidor de desarrollo**
    ```bash
    npm run dev
    ```
 
-5. **Abrir en el navegador**
+4. **Abrir en el navegador**
    ```
    http://localhost:3000
    ```

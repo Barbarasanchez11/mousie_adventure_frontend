@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom'
 
-// Mock IntersectionObserver
+
 global.IntersectionObserver = class IntersectionObserver {
   constructor() {}
   disconnect() {}
@@ -8,7 +8,7 @@ global.IntersectionObserver = class IntersectionObserver {
   unobserve() {}
 }
 
-// Mock ResizeObserver
+
 global.ResizeObserver = class ResizeObserver {
   constructor() {}
   disconnect() {}
@@ -16,22 +16,22 @@ global.ResizeObserver = class ResizeObserver {
   unobserve() {}
 }
 
-// Mock matchMedia
+
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
   value: jest.fn().mockImplementation(query => ({
     matches: false,
     media: query,
     onchange: null,
-    addListener: jest.fn(), // deprecated
-    removeListener: jest.fn(), // deprecated
+    addListener: jest.fn(), 
+    removeListener: jest.fn(), 
     addEventListener: jest.fn(),
     removeEventListener: jest.fn(),
     dispatchEvent: jest.fn(),
   })),
 })
 
-// Mock geolocation
+
 Object.defineProperty(navigator, 'geolocation', {
   writable: true,
   value: {

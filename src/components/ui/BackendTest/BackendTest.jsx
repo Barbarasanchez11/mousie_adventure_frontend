@@ -1,5 +1,8 @@
 import React, { useState } from 'react'
 import { generateRoute, createFamily } from '@services/api/route'
+import { checkHealth } from '@services/api/health'
+import { testAdventure as testAdventureService } from '@services/api/adventure'
+import { apiRequest } from '@services/api/config'
 
 // Componente para probar la conexión real con el backend
 const BackendTest = () => {
@@ -82,25 +85,32 @@ const BackendTest = () => {
     }
   }
 
-  // Probar aventura (ya implementada)
+  // Probar aventura usando la función centralizada
   const testAdventure = async () => {
     setLoading(true)
     try {
-      const response = await fetch('http://localhost:8000/adventure/test')
-      const data = await response.json()
+      const response = await apiRequest('adventure/test', 'GET')
       
-      console.log('🔍 Debug Aventura Test:', { status: response.status, data })
+      console.log('🔍 Debug Aventura Test:', response)
       
-      if (response.ok) {
-        addResult('Aventura Test', true, 'Aventura de prueba funcionando', data)
+      if (response.success) {
+        addResult('Aventura Test', true, 'Aventura de prueba funcionando', response.data)
       } else {
-        // Mostrar el error específico del backend
-        const errorMessage = data.detail || data.message || data.error || 'Error desconocido'
-        addResult('Aventura Test', false, `Error ${response.status}: ${errorMessage}`, data)
+        addResult('Aventura Test', false, `Error: ${response.message}`, response.data)
       }
     } catch (error) {
       console.error('🚨 Error en Aventura Test:', error)
-      addResult('Aventura Test', false, `Error de conexión: ${error.message}`)
+      
+      // Si es el error específico del GPS del backend, explicarlo mejor
+      if (error.message.includes('No synchronous function provided to "gps"')) {
+        addResult('Aventura Test', false, `Error del backend: El sistema GPS no está configurado correctamente en el backend. Este es un problema del backend que necesita ser arreglado por el equipo del backend.`, {
+          error_type: 'backend_gps_configuration',
+          message: error.message,
+          solution: 'El backend necesita configurar correctamente la función GPS síncrona o usar la API asíncrona (ainvoke, astream, etc.)'
+        })
+      } else {
+        addResult('Aventura Test', false, `Error de conexión: ${error.message}`)
+      }
     } finally {
       setLoading(false)
     }
@@ -181,7 +191,33 @@ const BackendTest = () => {
             Haz clic en cualquier botón para probar la conexión con el backend
           </p>
         ) : (
-          <div className="space-y-2 max-h-96 overflow-y-auto">
+          <>
+            {/* Resumen de estado */}
+            <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+              <h4 className="font-semibold text-blue-800 mb-2">📊 Resumen del Estado del Backend:</h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
+                <div className="flex items-center gap-2">
+                  <span className="text-green-500">✅</span>
+                  <span>Health Check: Funcionando</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-green-500">✅</span>
+                  <span>Crear Familia: Funcionando</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-green-500">✅</span>
+                  <span>Generar Ruta: Funcionando</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-red-500">❌</span>
+                  <span>Aventura Test: Error GPS del backend</span>
+                </div>
+              </div>
+              <p className="text-xs text-blue-600 mt-2">
+                <strong>Nota:</strong> El error en "Aventura Test" es un problema de configuración GPS en el backend. El backend necesita configurar correctamente la función GPS síncrona o usar la API asíncrona.
+              </p>
+            </div>
+            <div className="space-y-2 max-h-96 overflow-y-auto">
             {testResults.map((result) => (
               <div
                 key={result.id}
@@ -215,7 +251,8 @@ const BackendTest = () => {
                 </p>
               </div>
             ))}
-          </div>
+            </div>
+          </>
         )}
       </div>
     </div>

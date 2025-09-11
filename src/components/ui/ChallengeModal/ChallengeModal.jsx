@@ -35,6 +35,8 @@ const ChallengeModal = ({
         place.name,
         childrenAges,
         {
+          latitude: place.latitude || 40.4168,
+          longitude: place.longitude || -3.7038,
           activities: place.activities || [],
           challenges: place.challenges || [],
           magical_facts: place.magical_facts || [],

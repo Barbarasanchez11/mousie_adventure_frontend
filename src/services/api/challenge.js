@@ -20,31 +20,62 @@ class ChallengeService {
     try {
       console.log(`🎯 Generando desafío para ${placeName} con edades ${childrenAges}`)
       
-      const requestData = {
-        place_name: placeName,
-        children_ages: childrenAges,
-        place_data: placeData || {}
+      // Primero intentar con el endpoint de aventura
+      try {
+        const requestData = {
+          latitude: placeData?.latitude || 40.4168,
+          longitude: placeData?.longitude || -3.7038,
+          children_ages: childrenAges
+        }
+
+        const response = await apiRequest('adventure/start', 'POST', requestData)
+        
+        if (response.success) {
+          console.log(`✅ Desafío generado desde adventure/start para ${placeName}:`, response.data)
+          return {
+            success: true,
+            data: {
+              challenge: response.data.challenge || 'Desafío mágico del Ratoncito Pérez',
+              place_name: placeName,
+              children_ages: childrenAges,
+              has_real_data: response.data.has_real_data || false,
+              challenge_source: 'adventure_api',
+              difficulty: this.calculateDifficulty(childrenAges),
+              estimated_time: this.calculateEstimatedTime(childrenAges),
+              rewards: this.generateRewards(placeName),
+              story: response.data.story || '',
+              curiosity: response.data.curiosity || '',
+              reward: response.data.reward || ''
+            }
+          }
+        }
+      } catch (adventureError) {
+        console.log('⚠️ Adventure/start falló, intentando con test endpoint')
       }
 
-      const response = await apiRequest(`${this.baseURL}/challenge/generate`, 'POST', requestData)
+      // Si falla, usar el endpoint de test
+      const testResponse = await apiRequest('adventure/test', 'GET')
       
-      if (response.success) {
-        console.log(`✅ Desafío generado para ${placeName}:`, response.data)
+      if (testResponse.success) {
+        console.log(`✅ Desafío generado desde adventure/test para ${placeName}:`, testResponse.data)
         return {
           success: true,
           data: {
-            challenge: response.data.challenge || 'Desafío mágico del Ratoncito Pérez',
+            challenge: testResponse.data.challenge || 'Desafío mágico del Ratoncito Pérez',
             place_name: placeName,
             children_ages: childrenAges,
-            has_real_data: response.data.has_real_data || false,
-            challenge_source: response.data.challenge_source || 'ai_generated',
+            has_real_data: false,
+            challenge_source: 'test_api',
             difficulty: this.calculateDifficulty(childrenAges),
             estimated_time: this.calculateEstimatedTime(childrenAges),
-            rewards: this.generateRewards(placeName)
+            rewards: this.generateRewards(placeName),
+            story: testResponse.data.story || '',
+            curiosity: testResponse.data.curiosity || '',
+            reward: testResponse.data.reward || ''
           }
         }
       } else {
-        throw new Error(response.message || 'Error generando desafío')
+        throw new Error(testResponse.message || 'Error generando desafío')
       }
     } catch (error) {
       console.error('Error generando desafío:', error)
@@ -83,30 +114,32 @@ class ChallengeService {
    * @param {string} placeName - Nombre del lugar
    * @param {string} challenge - Desafío completado
    * @param {Object} userAnswer - Respuesta del usuario
+   * @param {string} familyId - ID de la familia (opcional)
    * @returns {Promise<Object>} - Resultado de la validación
    */
-  async validateChallenge(placeName, challenge, userAnswer) {
+  async validateChallenge(placeName, challenge, userAnswer, familyId = 'default-family') {
     try {
-      const requestData = {
-        place_name: placeName,
-        challenge: challenge,
-        user_answer: userAnswer
+      // Registrar la visita al lugar en gamificación
+      if (familyId) {
+        await this.recordPlaceVisit(familyId, placeName)
       }
 
-      const response = await apiRequest(`${this.baseURL}/challenge/validate`, 'POST', requestData)
+      // Simular validación (en un sistema real, esto se haría con IA)
+      const isCorrect = this.simulateChallengeValidation(placeName, challenge, userAnswer)
       
-      if (response.success) {
-        return {
-          success: true,
-          data: {
-            is_correct: response.data.is_correct || false,
-            score: response.data.score || 0,
-            feedback: response.data.feedback || '¡Bien hecho!',
-            rewards: response.data.rewards || []
-          }
+      if (isCorrect && familyId) {
+        // Registrar desafío completado en gamificación
+        await this.recordChallengeCompletion(familyId)
+      }
+
+      return {
+        success: true,
+        data: {
+          is_correct: isCorrect,
+          score: isCorrect ? this.calculateScore(placeName, challenge) : 0,
+          feedback: isCorrect ? '¡Excelente! Has completado el desafío' : '¡Buen intento! Sigue explorando',
+          rewards: isCorrect ? this.generateRewards(placeName) : []
         }
-      } else {
-        throw new Error(response.message || 'Error validando desafío')
       }
     } catch (error) {
       console.error('Error validando desafío:', error)
@@ -119,6 +152,57 @@ class ChallengeService {
           rewards: []
         }
       }
+    }
+  }
+
+  /**
+   * Simular validación de desafío (en un sistema real, esto se haría con IA)
+   * @param {string} placeName - Nombre del lugar
+   * @param {string} challenge - Desafío completado
+   * @param {Object} userAnswer - Respuesta del usuario
+   * @returns {boolean} - Si la respuesta es correcta
+   */
+  simulateChallengeValidation(placeName, challenge, userAnswer) {
+    // Simulación simple: si la respuesta tiene más de 10 caracteres, es correcta
+    const answerText = userAnswer.answer || userAnswer.toString()
+    return answerText.length > 10
+  }
+
+  /**
+   * Calcular puntuación del desafío
+   * @param {string} placeName - Nombre del lugar
+   * @param {string} challenge - Desafío completado
+   * @returns {number} - Puntuación obtenida
+   */
+  calculateScore(placeName, challenge) {
+    const baseScore = 100
+    const placeBonus = placeName.length * 5 // Bonus por nombre del lugar
+    const challengeBonus = challenge.length * 2 // Bonus por complejidad del desafío
+    return baseScore + placeBonus + challengeBonus
+  }
+
+  /**
+   * Registrar visita al lugar en gamificación
+   * @param {string} familyId - ID de la familia
+   * @param {string} placeName - Nombre del lugar
+   */
+  async recordPlaceVisit(familyId, placeName) {
+    try {
+      await apiRequest(`gamification/family/${familyId}/visit-place?place_name=${encodeURIComponent(placeName)}`, 'POST')
+    } catch (error) {
+      console.error('Error registrando visita:', error)
+    }
+  }
+
+  /**
+   * Registrar desafío completado en gamificación
+   * @param {string} familyId - ID de la familia
+   */
+  async recordChallengeCompletion(familyId) {
+    try {
+      await apiRequest(`gamification/family/${familyId}/complete-challenge`, 'POST')
+    } catch (error) {
+      console.error('Error registrando desafío completado:', error)
     }
   }
 
@@ -250,12 +334,20 @@ class ChallengeService {
    */
   async getChallengeStats(familyId) {
     try {
-      const response = await apiRequest(`${this.baseURL}/challenge/stats?family_id=${familyId}`, 'GET')
+      const response = await apiRequest(`gamification/family/${familyId}/stats`, 'GET')
       
       if (response.success) {
         return {
           success: true,
-          data: response.data
+          data: {
+            total_challenges: response.data.challenges_completed || 0,
+            completed_challenges: response.data.challenges_completed || 0,
+            total_score: response.data.total_points || 0,
+            average_score: response.data.total_points / Math.max(response.data.challenges_completed, 1) || 0,
+            places_visited: response.data.places_visited_count || 0,
+            current_level: response.data.current_level?.level || 1,
+            achievements: response.data.achievements_count || 0
+          }
         }
       } else {
         throw new Error(response.message || 'Error obteniendo estadísticas')
@@ -268,7 +360,10 @@ class ChallengeService {
           total_challenges: 0,
           completed_challenges: 0,
           total_score: 0,
-          average_score: 0
+          average_score: 0,
+          places_visited: 0,
+          current_level: 1,
+          achievements: 0
         }
       }
     }

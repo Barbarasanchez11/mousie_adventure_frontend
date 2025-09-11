@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import InteractiveMap from '@components/ui/InteractiveMap/InteractiveMap'
 import RouteSelector from '@components/ui/RouteSelector/RouteSelector'
+import ChallengeModal from '@components/ui/ChallengeModal/ChallengeModal'
 import { generateRoute } from '@services/api/route'
 import { guideService } from '@services/api/guide'
 import { getMadridPlacesForMap, getMadridRoutesForMap, MADRID_PLACES } from '@data/madridPlaces'
@@ -15,6 +16,8 @@ const RouteManager = () => {
   const [completedPlaces, setCompletedPlaces] = useState(new Set()) // Lugares completados
   const [currentPlaceIndex, setCurrentPlaceIndex] = useState(0) // Lugar actual
   const [showRouteSelector, setShowRouteSelector] = useState(true) // Mostrar selector de rutas
+  const [showChallengeModal, setShowChallengeModal] = useState(false) // Mostrar modal de desafío
+  const [challengePlace, setChallengePlace] = useState(null) // Lugar para el desafío
   
   // Hook para obtener la ubicación del usuario
   const { location, loading: locationLoading, error: locationError } = useGeolocation()
@@ -68,6 +71,27 @@ const RouteManager = () => {
     setSelectedPlace(null)
     setCompletedPlaces(new Set())
     setCurrentPlaceIndex(0)
+  }
+
+  // Manejar inicio de desafío
+  const handleStartChallenge = (place) => {
+    setChallengePlace(place)
+    setShowChallengeModal(true)
+  }
+
+  // Manejar completado de desafío
+  const handleChallengeComplete = (challengeData) => {
+    console.log('Desafío completado:', challengeData)
+    
+    // Marcar el lugar como completado
+    const placeIndex = route.places.findIndex(p => p.name === challengeData.place.name)
+    if (placeIndex !== -1) {
+      setCompletedPlaces(prev => new Set([...prev, placeIndex]))
+    }
+    
+    // Cerrar el modal
+    setShowChallengeModal(false)
+    setChallengePlace(null)
   }
 
   // Marcar un lugar como completado
@@ -399,8 +423,7 @@ const RouteManager = () => {
                           <button
                             onClick={(e) => {
                               e.stopPropagation()
-                              // Aquí podrías añadir lógica para iniciar el desafío
-                              alert('¡Iniciando desafío!')
+                              handleStartChallenge(place)
                             }}
                             className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm font-medium transition-colors"
                           >
@@ -466,6 +489,18 @@ const RouteManager = () => {
           )}
         </div>
       )}
+
+      {/* Modal de Desafío */}
+      <ChallengeModal
+        isOpen={showChallengeModal}
+        onClose={() => {
+          setShowChallengeModal(false)
+          setChallengePlace(null)
+        }}
+        place={challengePlace}
+        childrenAges={[6, 8]}
+        onChallengeComplete={handleChallengeComplete}
+      />
     </div>
   )
 }

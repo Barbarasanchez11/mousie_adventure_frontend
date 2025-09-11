@@ -273,12 +273,6 @@
     z-index: 3 !important;
   }
 
-  /* Navbar z-index override para estar por encima de todo */
-  .navbar {
-    z-index: 9998 !important;
-    position: sticky !important;
-    top: 0 !important;
-  }
   
   /* Loading states */
   .loading-skeleton {

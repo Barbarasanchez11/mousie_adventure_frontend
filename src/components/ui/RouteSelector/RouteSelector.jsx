@@ -7,11 +7,25 @@ const RouteSelector = ({ onRouteSelect, userLocation, childrenAges = [5, 8] }) =
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [customRoute, setCustomRoute] = useState(null)
+  const [backendStatus, setBackendStatus] = useState(null)
 
   // Cargar rutas temáticas al montar el componente
   useEffect(() => {
     loadThematicRoutes()
+    testBackendConnection()
   }, [])
+
+  const testBackendConnection = async () => {
+    try {
+      const status = await guideDataService.testBackendConnection()
+      setBackendStatus(status)
+    } catch (error) {
+      setBackendStatus({
+        success: false,
+        message: 'Error probando conexión con el backend'
+      })
+    }
+  }
 
   const loadThematicRoutes = async () => {
     setLoading(true)
@@ -127,6 +141,36 @@ const RouteSelector = ({ onRouteSelect, userLocation, childrenAges = [5, 8] }) =
         </p>
       </div>
 
+      {/* Backend Status */}
+      {backendStatus && (
+        <div className={`border rounded-lg p-4 mb-6 ${
+          backendStatus.success 
+            ? 'bg-green-50 border-green-200' 
+            : 'bg-yellow-50 border-yellow-200'
+        }`}>
+          <div className="flex items-center">
+            <span className={`text-lg mr-2 ${
+              backendStatus.success ? 'text-green-500' : 'text-yellow-500'
+            }`}>
+              {backendStatus.success ? '✅' : '⚠️'}
+            </span>
+            <div>
+              <p className={`font-medium ${
+                backendStatus.success ? 'text-green-800' : 'text-yellow-800'
+              }`}>
+                {backendStatus.success ? 'Backend Conectado' : 'Backend No Disponible'}
+              </p>
+              <p className={`text-sm ${
+                backendStatus.success ? 'text-green-600' : 'text-yellow-600'
+              }`}>
+                {backendStatus.message}
+                {backendStatus.placesFound && ` (${backendStatus.placesFound} lugares encontrados)`}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Error Message */}
       {error && (
         <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
@@ -179,6 +223,58 @@ const RouteSelector = ({ onRouteSelect, userLocation, childrenAges = [5, 8] }) =
               </div>
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* Ruta Clásica */}
+      <div className="mb-6">
+        <h3 className="text-lg font-semibold text-gray-800 mb-4">
+          🏛️ Ruta Clásica de Madrid
+        </h3>
+        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl p-4 mb-4">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-full flex items-center justify-center text-white text-xl">
+              🏛️
+            </div>
+            <div>
+              <h4 className="font-semibold text-gray-800">Ruta Clásica de Madrid</h4>
+              <p className="text-sm text-gray-600">Lugares emblemáticos tradicionales</p>
+            </div>
+          </div>
+          <p className="text-sm text-gray-700 mb-4">
+            Una ruta tradicional por los lugares más emblemáticos de Madrid: Plaza Mayor, Puerta del Sol, Palacio Real, y más.
+          </p>
+          <button
+            onClick={() => {
+              // Generar ruta clásica usando datos locales
+              const classicRoute = {
+                route_id: `classic_madrid_${Date.now()}`,
+                name: 'Ruta Clásica de Madrid',
+                description: 'Una ruta tradicional por los lugares más emblemáticos de Madrid',
+                categories: ['historia', 'clásico'],
+                total_places: 8,
+                estimated_duration: '2-3 horas',
+                difficulty: 'Fácil',
+                source: 'local',
+                places: [
+                  { id: 'plaza_mayor', name: 'Plaza Mayor', latitude: 40.4154, longitude: -3.7074, description: 'Plaza histórica de Madrid', type: 'start', challenge: 'Cuenta las ventanas de la plaza', reward: 'Recompensa por visitar la plaza' },
+                  { id: 'puerta_sol', name: 'Puerta del Sol', latitude: 40.4168, longitude: -3.7038, description: 'Kilómetro cero de España', type: 'place', challenge: 'Encuentra el kilómetro cero', reward: 'Recompensa por encontrar el km 0' },
+                  { id: 'palacio_real', name: 'Palacio Real', latitude: 40.4180, longitude: -3.7142, description: 'Residencia oficial del Rey', type: 'place', challenge: 'Encuentra el trono real', reward: 'Recompensa por visitar el palacio' },
+                  { id: 'mercado_san_miguel', name: 'Mercado de San Miguel', latitude: 40.4158, longitude: -3.7072, description: 'Mercado gourmet más famoso', type: 'place', challenge: 'Prueba un pincho de jamón', reward: 'Recompensa gastronómica' },
+                  { id: 'parque_retiro', name: 'Parque del Retiro', latitude: 40.4152, longitude: -3.6844, description: 'Parque más famoso de Madrid', type: 'place', challenge: 'Encuentra el Palacio de Cristal', reward: 'Recompensa por explorar el parque' },
+                  { id: 'templo_debod', name: 'Templo de Debod', latitude: 40.4240, longitude: -3.7179, description: 'Templo egipcio único en España', type: 'place', challenge: 'Descubre los jeroglíficos', reward: 'Recompensa por visitar el templo' },
+                  { id: 'gran_via', name: 'Gran Vía', latitude: 40.4200, longitude: -3.7038, description: 'El Broadway madrileño', type: 'place', challenge: 'Cuenta los teatros de la calle', reward: 'Recompensa por recorrer la Gran Vía' },
+                  { id: 'museo_prado', name: 'Museo del Prado', latitude: 40.4138, longitude: -3.6921, description: 'Museo de arte más importante', type: 'end', challenge: 'Encuentra Las Meninas', reward: 'Recompensa final por completar la ruta' }
+                ]
+              }
+              if (onRouteSelect) {
+                onRouteSelect(classicRoute)
+              }
+            }}
+            className="w-full bg-gradient-to-r from-blue-500 to-indigo-500 text-white py-3 px-6 rounded-xl font-semibold hover:from-blue-600 hover:to-indigo-600 transition-all duration-200 shadow-lg hover:shadow-xl"
+          >
+            🏛️ Generar Ruta Clásica
+          </button>
         </div>
       </div>
 

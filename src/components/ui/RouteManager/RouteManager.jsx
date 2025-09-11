@@ -32,28 +32,21 @@ const RouteManager = () => {
       // Crear una ruta simulada con lugares reales
       const simulatedRoute = {
         route_id: 'madrid_real_route_' + Date.now(),
+        name: 'Ruta Clásica de Madrid',
+        description: 'Una ruta tradicional por los lugares más emblemáticos de Madrid',
         total_places: madridPlaces.length,
         estimated_duration: '2-3 horas',
         difficulty: 'Fácil',
         places: madridPlaces,
-        routes: madridRoutes
+        routes: madridRoutes,
+        source: 'local'
       }
       
       setRoute(simulatedRoute)
       setSelectedPlace(null)
       setCompletedPlaces(new Set())
       setCurrentPlaceIndex(0)
-      
-      // Intentar conectar con el backend para obtener guías reales
-      try {
-        const guideResponse = await guideService.getMadridRoute([5, 8])
-        if (guideResponse.success) {
-          console.log('Guías del backend obtenidas:', guideResponse.data)
-          // Aquí podrías integrar las guías del backend
-        }
-      } catch (guideError) {
-        console.log('Usando datos locales de Madrid:', guideError.message)
-      }
+      setShowRouteSelector(false)
       
     } catch (err) {
       console.error('Error al generar ruta:', err)
@@ -114,10 +107,10 @@ const RouteManager = () => {
     return Array.from(completedPlaces).map(index => route.places[index])
   }
 
-  // Cargar ruta de ejemplo al montar el componente
-  useEffect(() => {
-    handleGenerateRoute()
-  }, [])
+  // No cargar ruta automáticamente - el usuario debe seleccionar una
+  // useEffect(() => {
+  //   handleGenerateRoute()
+  // }, [])
 
   return (
     <div className="space-y-6">

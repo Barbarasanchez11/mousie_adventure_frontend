@@ -22,6 +22,14 @@ const RouteManager = () => {
   // Hook para obtener la ubicación del usuario
   const { location, loading: locationLoading, error: locationError } = useGeolocation()
 
+  // Efecto para actualizar automáticamente cuando cambie la ubicación
+  React.useEffect(() => {
+    // Forzar re-render cuando cambie la ubicación para actualizar botones de proximidad
+    if (location) {
+      console.log('📍 Ubicación actualizada:', location.latitude, location.longitude)
+    }
+  }, [location])
+
   // Generar una nueva ruta usando lugares reales de Madrid
   const handleGenerateRoute = async () => {
     setLoading(true)
@@ -91,11 +99,11 @@ const RouteManager = () => {
 
   // Verificar si el usuario está cerca de un lugar (50 metros)
   const isNearPlace = (place) => {
-    if (!location) return false
+    if (!location || !place.latitude || !place.longitude) return false
     const distance = calculateDistance(
-      location.latitude,
-      location.longitude,
-      place.latitude,
+      location.latitude, 
+      location.longitude, 
+      place.latitude, 
       place.longitude
     )
     return distance <= 50 // 50 metros de proximidad
@@ -378,7 +386,7 @@ const RouteManager = () => {
                           </button>
                         )}
                         
-                        {/* Botón de desafío - Solo para el lugar actual */}
+                        {/* Botón para el lugar actual (siempre visible) */}
                         {isCurrent && !isCompleted && (
                           <button
                             onClick={(e) => {
@@ -392,28 +400,28 @@ const RouteManager = () => {
                           </button>
                         )}
                         
-                        {/* Botón de proximidad - Para lugares no actuales */}
-                        {!isCurrent && !isCompleted && (
+                        {/* Botón para lugares no actuales (solo cuando esté cerca) */}
+                        {!isCurrent && !isCompleted && isNearPlace(place) && (
                           <button
                             onClick={(e) => {
                               e.stopPropagation()
-                              if (isNearPlace(place)) {
-                                handleStartChallenge(place)
-                              }
+                              handleStartChallenge(place)
                             }}
-                            disabled={!isNearPlace(place)}
-                            className={`py-1.5 rounded-lg font-medium transition-colors flex-1 min-w-0 px-0.5 text-[10px] xs:px-2 xs:py-1 xs:text-xs ${
-                              isNearPlace(place)
-                                ? 'bg-blue-500 hover:bg-blue-600 text-white'
-                                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                            }`}
+                            className="bg-orange-500 hover:bg-orange-600 text-white py-1.5 rounded-lg font-medium transition-colors flex-1 min-w-0 px-0.5 text-[10px] xs:px-2 xs:py-1 xs:text-xs"
                           >
-                            <span className="block xs:hidden">
-                              {isNearPlace(place) ? '🎯 Desafío' : '📍 Acércate'}
-                            </span>
-                            <span className="hidden xs:block">
-                              {isNearPlace(place) ? '🎯 Iniciar Desafío' : '📍 Acércate al lugar'}
-                            </span>
+                            <span className="block xs:hidden">🎯 Desafío</span>
+                            <span className="hidden xs:block">🎯 Iniciar Desafío</span>
+                          </button>
+                        )}
+                        
+                        {/* Botón de proximidad para lugares no actuales */}
+                        {!isCurrent && !isCompleted && !isNearPlace(place) && (
+                          <button
+                            disabled
+                            className="bg-gray-300 text-gray-500 py-1.5 rounded-lg font-medium transition-colors flex-1 min-w-0 px-0.5 text-[10px] xs:px-2 xs:py-1 xs:text-xs cursor-not-allowed"
+                          >
+                            <span className="block xs:hidden">📍 Acércate</span>
+                            <span className="hidden xs:block">📍 Acércate al lugar</span>
                           </button>
                         )}
                       </div>

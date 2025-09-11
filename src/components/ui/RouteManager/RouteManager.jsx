@@ -170,12 +170,6 @@ const RouteManager = () => {
       {/* Controles */}
       <div className="mb-6 flex flex-wrap gap-4 items-center">
 
-        {location && (
-          <div className="text-sm text-green-600 flex items-center gap-2">
-            <span>📍</span>
-            Ubicación detectada: {location.latitude.toFixed(4)}, {location.longitude.toFixed(4)}
-          </div>
-        )}
 
         {locationError && (
           <div className="text-sm text-red-600 flex items-center gap-2">
@@ -329,21 +323,6 @@ const RouteManager = () => {
                         </p>
                       )}
                       
-                      <div className="flex flex-wrap gap-2 text-xs mb-3">
-                        <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded">
-                          📍 {place.latitude.toFixed(4)}, {place.longitude.toFixed(4)}
-                        </span>
-                        {place.challenge && (
-                          <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded">
-                            🎯 {place.challenge}
-                          </span>
-                        )}
-                        {place.reward && (
-                          <span className="bg-green-100 text-green-800 px-2 py-1 rounded">
-                            🏆 {place.reward}
-                          </span>
-                        )}
-                      </div>
 
                       {/* Botones de acción */}
                       <div className="flex flex-col xs:flex-row gap-2">
@@ -409,9 +388,6 @@ const RouteManager = () => {
                   {selectedPlace.description}
                 </p>
               )}
-              <div className="text-sm text-gray-500">
-                <p>📍 Coordenadas: {selectedPlace.latitude.toFixed(4)}, {selectedPlace.longitude.toFixed(4)}</p>
-              </div>
             </div>
             <div>
               {selectedPlace.challenge && (

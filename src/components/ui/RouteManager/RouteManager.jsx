@@ -160,31 +160,15 @@ const RouteManager = () => {
             </p>
             <button
               onClick={() => setShowRouteSelector(true)}
-              className="mt-2 text-sm text-purple-600 hover:text-purple-800 underline"
+              className="mt-3 bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 text-sm"
             >
-              🔄 Cambiar ruta
+              <span>🔄</span>
+              Cambiar ruta
             </button>
           </div>
 
       {/* Controles */}
       <div className="mb-6 flex flex-wrap gap-4 items-center">
-        <button
-          onClick={handleGenerateRoute}
-          disabled={loading}
-          className="bg-primary-500 hover:bg-primary-600 disabled:bg-gray-400 text-white px-6 py-2 rounded-lg font-medium transition-colors flex items-center gap-2"
-        >
-          {loading ? (
-            <>
-              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-              Generando...
-            </>
-          ) : (
-            <>
-              <span>🔄</span>
-              Generar Nueva Ruta
-            </>
-          )}
-        </button>
 
         {location && (
           <div className="text-sm text-green-600 flex items-center gap-2">

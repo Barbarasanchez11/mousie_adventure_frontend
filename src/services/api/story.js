@@ -106,7 +106,7 @@ class StoryService {
       console.log(`🎯 Obteniendo desafío para ${placeName}`)
       
       const requestData = {
-        question: `Crea un desafío divertido para niños de ${childrenAges.join(' y ')} años en ${placeName}`,
+        question: `Crea un desafío corto y divertido para niños de ${childrenAges.join(' y ')} años en ${placeName}. Máximo 2-3 oraciones.`,
         latitude: coordinates?.latitude || 40.4168,
         longitude: coordinates?.longitude || -3.7038,
         place_name: placeName,
@@ -120,7 +120,7 @@ class StoryService {
         return {
           success: true,
           data: {
-            challenge: response.data.answer || 'Desafío mágico del Ratoncito Pérez',
+            challenge: this.truncateText(response.data.answer || 'Desafío mágico del Ratoncito Pérez'),
             place_name: placeName,
             children_ages: childrenAges,
             has_real_data: response.data.has_real_data || false,
@@ -197,6 +197,17 @@ class StoryService {
   }
 
   /**
+   * Truncar texto si es muy largo
+   * @param {string} text - Texto a truncar
+   * @param {number} maxLength - Longitud máxima
+   * @returns {string} - Texto truncado
+   */
+  truncateText(text, maxLength = 300) {
+    if (text.length <= maxLength) return text
+    return text.substring(0, maxLength).trim() + '...'
+  }
+
+  /**
    * Obtener desafío de fallback
    * @param {string} placeName - Nombre del lugar
    * @param {Array<number>} childrenAges - Edades de los niños
@@ -216,7 +227,7 @@ class StoryService {
     return {
       success: true,
       data: {
-        challenge: challenge,
+        challenge: this.truncateText(challenge),
         place_name: placeName,
         children_ages: childrenAges,
         has_real_data: false,

@@ -170,11 +170,39 @@
   .chatbot-button {
     z-index: 50 !important;
     position: fixed !important;
+    box-shadow: 0 8px 32px rgba(139, 92, 246, 0.3) !important;
+    border: 2px solid rgba(255, 255, 255, 0.2) !important;
   }
 
   /* Animación para el botón del chatbot */
   .chatbot-button:hover {
     transform: scale(1.1) !important;
+    box-shadow: 0 12px 40px rgba(139, 92, 246, 0.4) !important;
+  }
+
+  /* Animación de pulso para llamar la atención */
+  .chatbot-button::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #8b5cf6, #ec4899, #8b5cf6);
+    border-radius: 50%;
+    z-index: -1;
+    animation: pulse-ring 2s infinite;
+  }
+
+  @keyframes pulse-ring {
+    0% {
+      transform: scale(0.8);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1.2);
+      opacity: 0;
+    }
   }
 
   /* Animación de typing */

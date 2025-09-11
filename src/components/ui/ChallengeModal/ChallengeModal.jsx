@@ -126,7 +126,7 @@ const ChallengeModal = ({
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999] p-4 challenge-modal-overlay">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto challenge-modal-content">
+      <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full challenge-modal-content">
         {/* Header */}
         <div className="bg-gradient-to-r from-purple-500 to-pink-500 text-white p-6 rounded-t-2xl">
           <div className="flex items-center justify-between">
@@ -207,20 +207,12 @@ const ChallengeModal = ({
           {/* FASE 2: DESAFÍO ACEPTADO */}
           {challenge && acceptedChallenge && !showResult && (
             <div className="space-y-6">
-              {/* Challenge Info */}
-              <div className="bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-xl p-4 animate-slide-in-right">
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl animate-pulse-glow">🎯</span>
-                  <div className="flex-1">
-                    <h3 className="font-bold text-gray-800 mb-3 text-lg">Tu Desafío</h3>
-                    <div className="max-h-64 overflow-y-auto border border-gray-200 rounded-lg p-4 bg-white/80">
-                      <p className="text-gray-700 text-sm leading-relaxed">
-                        {challenge.challenge}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
+               {/* Challenge Info */}
+               <div className="bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-xl p-6 animate-slide-in-right min-h-[200px]">
+                 <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-wrap break-words">
+                   {challenge.challenge}
+                 </p>
+               </div>
 
               {/* Challenge Details */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

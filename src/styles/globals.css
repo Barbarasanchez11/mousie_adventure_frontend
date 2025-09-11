@@ -153,6 +153,39 @@
     scrollbar-gutter: stable !important;
   }
 
+  /* Scrollbar específico para el desafío */
+  .challenge-scroll {
+    height: 200px !important;
+    min-height: 200px !important;
+    max-height: 200px !important;
+    overflow-y: auto !important;
+    scrollbar-width: thin !important;
+    scrollbar-color: #8B5CF6 #F3F4F6 !important;
+    -ms-overflow-style: scrollbar !important;
+    word-wrap: break-word !important;
+    white-space: pre-wrap !important;
+  }
+
+  .challenge-scroll::-webkit-scrollbar {
+    width: 8px !important;
+    display: block !important;
+  }
+
+  .challenge-scroll::-webkit-scrollbar-track {
+    background: #F3F4F6 !important;
+    border-radius: 4px !important;
+  }
+
+  .challenge-scroll::-webkit-scrollbar-thumb {
+    background: #8B5CF6 !important;
+    border-radius: 4px !important;
+    min-height: 20px !important;
+  }
+
+  .challenge-scroll::-webkit-scrollbar-thumb:hover {
+    background: #7C3AED !important;
+  }
+
   /* Fallback para navegadores que no soportan scrollbar personalizado */
   .story-scroll::-webkit-scrollbar {
     -webkit-appearance: none !important;

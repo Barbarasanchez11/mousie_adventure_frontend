@@ -40,7 +40,7 @@ class ChallengeService {
         challenge: challengeResult.success
       })
 
-      return {
+      const finalData = {
         success: true,
         data: {
           challenge: challengeResult.data.challenge || 'Desafío mágico del Ratoncito Pérez',
@@ -58,6 +58,8 @@ class ChallengeService {
           business_offer: this.generateBusinessOffer(placeName)
         }
       }
+
+      return finalData
     } catch (error) {
       console.error('Error generando desafío:', error)
       return this.getFallbackChallenge(placeName, childrenAges)

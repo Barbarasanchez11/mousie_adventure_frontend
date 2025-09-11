@@ -1,6 +1,6 @@
 import React from 'react'
 
-// Componente para mostrar un logro
+
 const AchievementBadge = ({ 
   title, 
   description, 

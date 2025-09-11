@@ -14,8 +14,8 @@ const ChallengeModal = ({
   const [showResult, setShowResult] = useState(false)
   const [result, setResult] = useState(null)
   const [error, setError] = useState(null)
-  const [showStory, setShowStory] = useState(true) // Mostrar historia primero
-  const [acceptedChallenge, setAcceptedChallenge] = useState(false) // Usuario aceptó el reto
+  const [showStory, setShowStory] = useState(true) 
+  const [acceptedChallenge, setAcceptedChallenge] = useState(false) 
 
   useEffect(() => {
     if (isOpen && place) {

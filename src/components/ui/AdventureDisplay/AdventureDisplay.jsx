@@ -1,6 +1,6 @@
 import React from 'react'
 
-// Componente para mostrar los detalles de una aventura
+
 const AdventureDisplay = ({ adventure }) => {
   if (!adventure) {
     return (

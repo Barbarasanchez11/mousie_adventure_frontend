@@ -1,21 +1,15 @@
 import { apiRequest } from './config.js'
 
-/**
- * Servicio para acceder a datos de guías del backend
- * Conecta con los endpoints GPS del backend
- */
+
 class GuideDataService {
   constructor() {
     this.baseURL = '/gps'
   }
 
-  /**
-   * Obtener todos los lugares disponibles
-   * Busca con un término genérico para obtener todos los lugares
-   */
+ 
   async getAllPlaces() {
     try {
-      // Buscar con un término genérico que debería devolver todos los lugares
+      
       const response = await apiRequest(`gps/places/search?query=Madrid`, 'GET')
       return {
         success: true,
@@ -32,9 +26,7 @@ class GuideDataService {
     }
   }
 
-  /**
-   * Buscar lugares por nombre
-   */
+ 
   async searchPlaces(query) {
     try {
       const response = await apiRequest(`gps/places/search?query=${encodeURIComponent(query)}`, 'GET')
@@ -54,9 +46,7 @@ class GuideDataService {
     }
   }
 
-  /**
-   * Obtener lugares cercanos a una ubicación
-   */
+  
   async getNearbyPlaces(lat, lng, radius = 1000) {
     try {
       const response = await apiRequest(`gps/places/nearby?lat=${lat}&lng=${lng}&radius=${radius}`, 'GET')
@@ -76,9 +66,7 @@ class GuideDataService {
     }
   }
 
-  /**
-   * Obtener detalles de un lugar específico
-   */
+ 
   async getPlaceDetails(placeName) {
     try {
       const response = await apiRequest(`gps/places/${encodeURIComponent(placeName)}`, 'GET')
@@ -96,9 +84,7 @@ class GuideDataService {
     }
   }
 
-  /**
-   * Obtener ruta entre dos lugares
-   */
+ 
   async getRoute(fromPlace, toPlace) {
     try {
       const response = await apiRequest(`gps/route?from=${encodeURIComponent(fromPlace)}&to=${encodeURIComponent(toPlace)}`, 'GET')
@@ -116,13 +102,10 @@ class GuideDataService {
     }
   }
 
-  /**
-   * Obtener lugares por categoría/tema
-   * Intenta obtener datos del backend primero, luego usa datos locales como fallback
-   */
+
   async getPlacesByCategory(category) {
     try {
-      // Mapeo de categorías a términos de búsqueda específicos
+      
       const categorySearchTerms = {
         'museos': 'museo',
         'parques': 'parque',
@@ -133,11 +116,11 @@ class GuideDataService {
 
       const searchTerm = categorySearchTerms[category] || category
       
-      // Buscar lugares específicos de la categoría en el backend
+ 
       const searchResponse = await this.searchPlaces(searchTerm)
       
       if (searchResponse.success && searchResponse.data.length > 0) {
-        console.log(`✅ Backend devolvió ${searchResponse.data.length} lugares para categoría: ${category}`)
+
         return {
           success: true,
           data: searchResponse.data,
@@ -147,10 +130,7 @@ class GuideDataService {
         }
       }
 
-      // Si no hay resultados específicos, intentar búsqueda más amplia
-      console.log(`⚠️ No se encontraron lugares específicos para "${searchTerm}", intentando búsqueda más amplia...`)
-      
-      // Buscar con términos más generales
+    
       const generalSearchTerms = {
         'museos': ['arte', 'cultura', 'exposición'],
         'parques': ['jardín', 'naturaleza', 'verde'],
@@ -169,13 +149,12 @@ class GuideDataService {
         }
       }
 
-      // Eliminar duplicados
       const uniquePlaces = allFoundPlaces.filter((place, index, self) => 
         index === self.findIndex(p => p.name === place.name)
       )
 
       if (uniquePlaces.length > 0) {
-        console.log(`✅ Backend devolvió ${uniquePlaces.length} lugares para categoría: ${category} (búsqueda amplia)`)
+       
         return {
           success: true,
           data: uniquePlaces,
@@ -185,20 +164,17 @@ class GuideDataService {
         }
       }
 
-      // Si no encontramos nada en el backend, usar datos locales
-      console.log(`❌ Backend no devolvió lugares para categoría: ${category}, usando datos locales`)
+    
       return this.getLocalPlacesByCategory(category)
 
     } catch (error) {
       console.error('Error obteniendo lugares por categoría:', error)
-      console.log(`❌ Error en backend para categoría: ${category}, usando datos locales`)
+   
       return this.getLocalPlacesByCategory(category)
     }
   }
 
-  /**
-   * Obtener lugares locales por categoría (fallback)
-   */
+  
   getLocalPlacesByCategory(category) {
     const localPlaces = {
       'museos': [
@@ -334,38 +310,34 @@ class GuideDataService {
     }
   }
 
-  /**
-   * Probar la conexión con el backend
-   */
+
   async testBackendConnection() {
     try {
-      console.log('🔍 Probando conexión con el backend...')
-      
-      // Probar health check primero
+     
       const healthResponse = await apiRequest('health', 'GET')
       if (healthResponse.success) {
-        console.log('✅ Health check exitoso')
+       
       }
       
-      // Probar búsqueda básica
+     
       const testResponse = await this.searchPlaces('Plaza')
       
       if (testResponse.success) {
-        console.log('✅ Backend conectado correctamente')
+       
         return {
           success: true,
           message: 'Backend conectado correctamente',
           placesFound: testResponse.data.length
         }
       } else {
-        console.log('❌ Backend no responde correctamente')
+       
         return {
           success: false,
           message: 'Backend no responde correctamente'
         }
       }
     } catch (error) {
-      console.log('❌ Error de conexión con el backend:', error.message)
+      
       return {
         success: false,
         message: `Error de conexión: ${error.message}`
@@ -373,12 +345,10 @@ class GuideDataService {
     }
   }
 
-  /**
-   * Obtener rutas temáticas predefinidas
-   */
+
   async getThematicRoutes() {
     try {
-      // Definimos las rutas temáticas disponibles
+    
       const thematicRoutes = {
         'museos': {
           name: 'Ruta de Museos',
@@ -461,36 +431,33 @@ class GuideDataService {
     }
   }
 
-  /**
-   * Generar ruta personalizada basada en categorías
-   */
+
   async generateCustomRoute(categories, startLocation, childrenAges = [5, 8]) {
     try {
       const selectedPlaces = []
       let usingLocalData = false
       
-      // Para cada categoría, obtenemos algunos lugares
+     
       for (const category of categories) {
         const categoryPlaces = await this.getPlacesByCategory(category)
         if (categoryPlaces.success && categoryPlaces.data.length > 0) {
-          // Tomamos los primeros 2-3 lugares de cada categoría
+         
           const placesToAdd = categoryPlaces.data.slice(0, 2)
           selectedPlaces.push(...placesToAdd)
           
-          // Si estamos usando datos locales, lo marcamos
+        
           if (categoryPlaces.source === 'local') {
             usingLocalData = true
           }
         }
       }
 
-      // Si no hay lugares, usamos datos locales de fallback
+    
       if (selectedPlaces.length === 0) {
-        console.log('No se encontraron lugares, usando datos de fallback')
+       
         return this.getFallbackRoute(categories, startLocation, childrenAges)
       }
 
-      // Generamos la ruta
       const route = {
         route_id: `custom_${categories.join('_')}_${Date.now()}`,
         name: `Ruta Personalizada: ${categories.join(', ')}`,
@@ -526,11 +493,9 @@ class GuideDataService {
     }
   }
 
-  /**
-   * Ruta de fallback con datos locales
-   */
+ 
   getFallbackRoute(categories, startLocation, childrenAges) {
-    // Datos locales de fallback
+  
     const fallbackPlaces = {
       'museos': [
         { name: 'Museo del Prado', lat: 40.4138, lng: -3.6921, description: 'Museo de arte más importante de España' },

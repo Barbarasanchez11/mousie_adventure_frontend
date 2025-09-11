@@ -16,9 +16,7 @@ class RatoncitoChatbot {
    * @returns {Promise<Object>} Respuesta del chatbot
    */
   async sendMessage(message, placeName = null, childrenAges = null) {
-    try {
-      console.log(`🐭 Enviando mensaje al Ratoncito: ${message}`)
-      
+    try { 
       const requestData = {
         message: message,
         place_name: placeName || this.currentPlace,
@@ -42,18 +40,17 @@ class RatoncitoChatbot {
           })
         }
 
-        // Actualizar historial de conversación
+       
         this.conversationHistory.push(
           { role: 'user', content: message },
           { role: 'bot', content: response.data.response }
         )
 
-        // Limitar historial a 10 mensajes para no sobrecargar
         if (this.conversationHistory.length > 10) {
           this.conversationHistory = this.conversationHistory.slice(-10)
         }
         
-        console.log(`✅ Respuesta del Ratoncito:`, botResponse)
+       
         return {
           success: true,
           data: botResponse
@@ -73,7 +70,6 @@ class RatoncitoChatbot {
    */
   async getExamples() {
     try {
-      console.log('📝 Obteniendo ejemplos de mensajes')
       
       const response = await apiRequest(`${this.apiBase}/chatbot/examples`, 'GET')
       
@@ -94,9 +90,7 @@ class RatoncitoChatbot {
     }
   }
 
-  /**
-   * Respuesta de fallback cuando el backend no está disponible
-   */
+ 
   getFallbackResponse(message) {
     const fallbackResponses = [
       "¡Hola! Soy el Ratoncito Pérez. ¿En qué puedo ayudarte en tu aventura por Madrid?",
@@ -121,7 +115,7 @@ class RatoncitoChatbot {
       })
     }
 
-    // Añadir al historial
+   
     this.conversationHistory.push(
       { role: 'user', content: message },
       { role: 'bot', content: randomResponse }
@@ -133,9 +127,7 @@ class RatoncitoChatbot {
     }
   }
 
-  /**
-   * Ejemplos de fallback
-   */
+ 
   getFallbackExamples() {
     return [
       "Cuéntame una historia sobre este lugar",
@@ -146,37 +138,27 @@ class RatoncitoChatbot {
     ]
   }
 
-  /**
-   * Actualiza el lugar actual
-   */
+  
   setCurrentPlace(placeName) {
     this.currentPlace = placeName
   }
 
-  /**
-   * Actualiza las edades de los niños
-   */
+ 
   setChildrenAges(ages) {
     this.childrenAges = ages
   }
 
-  /**
-   * Obtiene el historial de conversación
-   */
+  
   getConversationHistory() {
     return this.conversationHistory
   }
 
-  /**
-   * Limpia el historial de conversación
-   */
+  
   clearHistory() {
     this.conversationHistory = []
   }
 
-  /**
-   * Añade un mensaje del usuario al historial
-   */
+  
   addUserMessage(message) {
     const userMessage = {
       id: Date.now(),
@@ -192,6 +174,6 @@ class RatoncitoChatbot {
   }
 }
 
-// Crear instancia y exportar por defecto
+
 const ratoncitoChatbot = new RatoncitoChatbot()
 export default ratoncitoChatbot

@@ -1,16 +1,10 @@
-import { apiRequest } from './config.js'
-
-// Función para hacer una pregunta al Ratoncito Pérez
 /**
  * Envía una pregunta al backend para que el Ratoncito Pérez la responda.
  * @param {string} questionText - La pregunta que el usuario quiere hacer.
  * @returns {Promise<Object>} - Una promesa con la respuesta del backend.
  */
 export const askQuestion = async (questionText) => {
-  // Por ahora, siempre devolver una respuesta de prueba
-  // Esto evita problemas con el backend que no está configurado correctamente
-  console.log('💬 Modo de prueba: Mostrando respuesta simulada del Ratoncito Pérez')
-  
+ 
   return {
     success: true,
     data: {

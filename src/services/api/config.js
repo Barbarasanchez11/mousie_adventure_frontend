@@ -1,25 +1,24 @@
 // config.js - Configuración de API corregida
 
 const API_CONFIG = {
-  baseURL: 'http://localhost:8000', // SIN barra final
+  baseURL: 'http://localhost:8000', 
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
   }
 }
 
-// Función para construir URLs correctamente
+
 const buildURL = (endpoint) => {
-  // Asegurar que endpoint empiece con /
+ 
   const cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`
-  // Evitar doble barra
+
   return `${API_CONFIG.baseURL}${cleanEndpoint}`
 }
 
 export const apiRequest = async (endpoint, method = 'GET', data = null) => {
   const url = buildURL(endpoint)
   
-  console.log('🔍 Debug API Request:', { url, method, data })
   
   try {
     const config = {
@@ -35,14 +34,6 @@ export const apiRequest = async (endpoint, method = 'GET', data = null) => {
     const response = await fetch(url, config)
     const responseData = await response.json()
 
-    console.log('🔍 Debug API Response:', {
-      status: response.status,
-      ok: response.ok,
-      data: responseData,
-      dataType: typeof responseData,
-      isArray: Array.isArray(responseData),
-      dataLength: Array.isArray(responseData) ? responseData.length : 'N/A'
-    })
 
     if (!response.ok) {
       const errorMessage = responseData.detail || responseData.message || 'Error desconocido'
@@ -67,7 +58,7 @@ export const apiRequest = async (endpoint, method = 'GET', data = null) => {
   }
 }
 
-// Función específica para testear la conexión
+
 export const testConnection = async () => {
   try {
     const response = await apiRequest('/health')

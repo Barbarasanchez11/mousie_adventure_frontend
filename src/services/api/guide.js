@@ -1,12 +1,11 @@
 import { apiRequest } from './config.js'
 
-// Servicio para conectar con el sistema de guías del backend
+
 class GuideService {
   constructor() {
     this.apiBase = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
   }
 
-  // Obtener la siguiente ruta desde un lugar actual
   async getNextRoute(currentPlace, childrenAges) {
     try {
       const response = await apiRequest('guide/next-route', 'POST', {
@@ -24,7 +23,7 @@ class GuideService {
     }
   }
 
-  // Obtener guía de navegación entre dos lugares
+  
   async getNavigationGuide(currentPlace, nextPlace, childrenAges) {
     try {
       const response = await apiRequest('guide/navigation', 'POST', {
@@ -43,7 +42,7 @@ class GuideService {
     }
   }
 
-  // Obtener todos los lugares disponibles
+ 
   async getAvailablePlaces() {
     try {
       const response = await apiRequest('guide/places', 'GET')
@@ -58,7 +57,7 @@ class GuideService {
     }
   }
 
-  // Obtener ruta completa de Madrid
+
   async getMadridRoute(childrenAges) {
     try {
       const response = await apiRequest('guide/madrid-route', 'POST', {
@@ -75,7 +74,7 @@ class GuideService {
     }
   }
 
-  // Marcar lugar como visitado
+
   async markPlaceVisited(placeName, childrenAges) {
     try {
       const response = await apiRequest('guide/visit-place', 'POST', {

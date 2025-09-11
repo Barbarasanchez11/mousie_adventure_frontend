@@ -1,6 +1,6 @@
 import { apiRequest } from './config.js'
 
-// Clase principal para manejar aventuras del Ratoncito Pérez
+
 class RatoncitoAdventure {
   constructor() {
     this.apiBase = 'http://localhost:8000'
@@ -9,7 +9,7 @@ class RatoncitoAdventure {
     this.familyId = null
   }
 
-  // Generar ruta completa
+
   async generateRoute(lat, lng, ages) {
     try {
       const response = await apiRequest('adventure/route/generate', 'POST', {
@@ -29,7 +29,7 @@ class RatoncitoAdventure {
     }
   }
 
-  // Iniciar aventura en lugar específico
+ 
   async startAdventureAtPlace(lat, lng, ages) {
     try {
       const response = await apiRequest('adventure/start', 'POST', {
@@ -48,7 +48,7 @@ class RatoncitoAdventure {
     }
   }
 
-  // Completar desafío y sumar puntos
+
   async completeChallenge(placeName, points = 25) {
     if (!this.familyId) {
       throw new Error('No hay familia creada')
@@ -70,7 +70,7 @@ class RatoncitoAdventure {
     }
   }
 
-  // Obtener siguiente lugar de la ruta
+ 
   async getNextPlace(routeId, currentPlace) {
     try {
       const response = await apiRequest(`adventure/route/${routeId}/next?current_place=${currentPlace}`)
@@ -85,7 +85,7 @@ class RatoncitoAdventure {
     }
   }
 
-  // Crear familia
+
   async createFamily(familyData) {
     try {
       const response = await apiRequest('gamification/family/create', 'POST', familyData)
@@ -97,7 +97,7 @@ class RatoncitoAdventure {
       throw new Error(response.message || 'Error al crear familia')
     } catch (error) {
       console.error('Error al crear familia:', error)
-      // Devolver el error en lugar de lanzarlo
+    
       return {
         success: false,
         message: error.message,
@@ -106,7 +106,7 @@ class RatoncitoAdventure {
     }
   }
 
-  // Obtener estadísticas de la familia
+  
   async getFamilyStats() {
     if (!this.familyId) {
       throw new Error('No hay familia creada')
@@ -126,10 +126,10 @@ class RatoncitoAdventure {
   }
 }
 
-// Instancia singleton
+
 const adventureAPI = new RatoncitoAdventure()
 
-// Funciones de conveniencia
+
 export const generateRoute = (lat, lng, ages) => adventureAPI.generateRoute(lat, lng, ages)
 export const startAdventureAtPlace = (lat, lng, ages) => adventureAPI.startAdventureAtPlace(lat, lng, ages)
 export const completeChallenge = (placeName, points) => adventureAPI.completeChallenge(placeName, points)
@@ -137,5 +137,5 @@ export const getNextPlace = (routeId, currentPlace) => adventureAPI.getNextPlace
 export const createFamily = (familyData) => adventureAPI.createFamily(familyData)
 export const getFamilyStats = () => adventureAPI.getFamilyStats()
 
-// Exportar la instancia para acceso directo
+
 export default adventureAPI

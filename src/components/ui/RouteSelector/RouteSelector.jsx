@@ -8,7 +8,7 @@ const RouteSelector = ({ onRouteSelect, userLocation, childrenAges = [5, 8] }) =
   const [error, setError] = useState(null)
   const [customRoute, setCustomRoute] = useState(null)
 
-  // Cargar rutas temáticas al montar el componente
+ 
   useEffect(() => {
     loadThematicRoutes()
   }, [])
@@ -202,7 +202,7 @@ const RouteSelector = ({ onRouteSelect, userLocation, childrenAges = [5, 8] }) =
           </p>
           <button
             onClick={() => {
-              // Generar ruta clásica usando datos locales
+              
               const classicRoute = {
                 route_id: `classic_madrid_${Date.now()}`,
                 name: 'Ruta Clásica de Madrid',

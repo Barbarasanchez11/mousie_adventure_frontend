@@ -9,7 +9,6 @@ const Chatbot = ({ isOpen, onClose, coordinates, placeName, childrenAges = [6, 8
   const [showExamples, setShowExamples] = useState(true)
   const messagesEndRef = useRef(null)
 
-  // Scroll automático al final de los mensajes
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }
@@ -18,7 +17,7 @@ const Chatbot = ({ isOpen, onClose, coordinates, placeName, childrenAges = [6, 8
     scrollToBottom()
   }, [messages])
 
-  // Mensaje inicial del Ratoncito Pérez
+
   useEffect(() => {
     if (isOpen && messages.length === 0) {
       const welcomeMessage = {
@@ -32,12 +31,12 @@ const Chatbot = ({ isOpen, onClose, coordinates, placeName, childrenAges = [6, 8
       }
       setMessages([welcomeMessage])
       
-      // Cargar ejemplos de mensajes
+    
       loadExamples()
     }
   }, [isOpen, placeName])
 
-  // Cargar ejemplos de mensajes
+ 
   const loadExamples = async () => {
     try {
       const response = await ratoncitoChatbot.getExamples()
@@ -49,7 +48,7 @@ const Chatbot = ({ isOpen, onClose, coordinates, placeName, childrenAges = [6, 8
     }
   }
 
-  // Manejar envío de mensaje
+ 
   const handleSendMessage = async (e) => {
     e.preventDefault()
     
@@ -65,14 +64,14 @@ const Chatbot = ({ isOpen, onClose, coordinates, placeName, childrenAges = [6, 8
       })
     }
 
-    // Añadir mensaje del usuario
+    
     setMessages(prev => [...prev, userMessage])
     setInputMessage('')
     setIsLoading(true)
     setShowExamples(false)
 
     try {
-      // Enviar mensaje al Ratoncito Pérez
+    
       const response = await ratoncitoChatbot.sendMessage(
         inputMessage.trim(),
         placeName,
@@ -80,10 +79,10 @@ const Chatbot = ({ isOpen, onClose, coordinates, placeName, childrenAges = [6, 8
       )
 
       if (response.success) {
-        // Crear array de mensajes para evitar duplicados
+       
         const messagesToAdd = []
         
-        // Si hay historia, mostrar solo la historia (no el mensaje principal)
+      
         if (response.data.story && response.data.story.trim().length > 0) {
           const storyMessage = {
             id: Date.now(),
@@ -97,11 +96,10 @@ const Chatbot = ({ isOpen, onClose, coordinates, placeName, childrenAges = [6, 8
           }
           messagesToAdd.push(storyMessage)
         } else {
-          // Si no hay historia, mostrar el mensaje principal
+      
           messagesToAdd.push(response.data)
         }
-        
-        // Si hay curiosidad y es diferente a la historia, añadirla
+       
         if (response.data.curiosity && 
             response.data.curiosity !== response.data.story &&
             response.data.curiosity.trim().length > 0) {
@@ -118,7 +116,7 @@ const Chatbot = ({ isOpen, onClose, coordinates, placeName, childrenAges = [6, 8
           messagesToAdd.push(curiosityMessage)
         }
         
-        // Añadir todos los mensajes de una vez
+      
         setMessages(prev => [...prev, ...messagesToAdd])
       } else {
         throw new Error('Error obteniendo respuesta')
@@ -140,7 +138,7 @@ const Chatbot = ({ isOpen, onClose, coordinates, placeName, childrenAges = [6, 8
     }
   }
 
-  // Manejar tecla Enter
+
   const handleKeyPress = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault()
@@ -148,14 +146,13 @@ const Chatbot = ({ isOpen, onClose, coordinates, placeName, childrenAges = [6, 8
     }
   }
 
-  // Limpiar conversación
   const handleClearChat = () => {
     setMessages([])
     ratoncitoChatbot.clearHistory()
     setShowExamples(true)
   }
 
-  // Manejar clic en ejemplo
+
   const handleExampleClick = (example) => {
     setInputMessage(example)
     setShowExamples(false)

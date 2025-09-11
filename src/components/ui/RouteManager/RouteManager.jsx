@@ -7,32 +7,32 @@ import { guideService } from '@services/api/guide'
 import { getMadridPlacesForMap, getMadridRoutesForMap, MADRID_PLACES } from '@data/madridPlaces'
 import { useGeolocation } from '@hooks/location/useGeolocation'
 
-// Componente para gestionar rutas y mostrar el mapa
+
 const RouteManager = () => {
   const [route, setRoute] = useState(null)
   const [selectedPlace, setSelectedPlace] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
-  const [completedPlaces, setCompletedPlaces] = useState(new Set()) // Lugares completados
-  const [currentPlaceIndex, setCurrentPlaceIndex] = useState(0) // Lugar actual
-  const [showRouteSelector, setShowRouteSelector] = useState(true) // Mostrar selector de rutas
-  const [showChallengeModal, setShowChallengeModal] = useState(false) // Mostrar modal de desafío
-  const [challengePlace, setChallengePlace] = useState(null) // Lugar para el desafío
+  const [completedPlaces, setCompletedPlaces] = useState(new Set()) 
+  const [currentPlaceIndex, setCurrentPlaceIndex] = useState(0) 
+  const [showRouteSelector, setShowRouteSelector] = useState(true) 
+  const [showChallengeModal, setShowChallengeModal] = useState(false) 
+  const [challengePlace, setChallengePlace] = useState(null) 
   
-  // Hook para obtener la ubicación del usuario
+ 
   const { location, loading: locationLoading, error: locationError } = useGeolocation()
 
-  // Generar una nueva ruta usando lugares reales de Madrid
+  
   const handleGenerateRoute = async () => {
     setLoading(true)
     setError(null)
     
     try {
-      // Usar lugares reales de Madrid
+  
       const madridPlaces = getMadridPlacesForMap()
       const madridRoutes = getMadridRoutesForMap()
       
-      // Crear una ruta simulada con lugares reales
+     
       const simulatedRoute = {
         route_id: 'madrid_real_route_' + Date.now(),
         name: 'Ruta Clásica de Madrid',
@@ -59,12 +59,11 @@ const RouteManager = () => {
     }
   }
 
-  // Manejar selección de un lugar
+  
   const handlePlaceSelect = (place) => {
     setSelectedPlace(place)
   }
 
-  // Manejar selección de ruta desde el selector
   const handleRouteSelect = (selectedRoute) => {
     setRoute(selectedRoute)
     setShowRouteSelector(false)
@@ -73,9 +72,9 @@ const RouteManager = () => {
     setCurrentPlaceIndex(0)
   }
 
-  // Función para calcular distancia entre dos puntos (en metros)
+ 
   const calculateDistance = (lat1, lon1, lat2, lon2) => {
-    const R = 6371e3 // Radio de la Tierra en metros
+    const R = 6371e3 
     const φ1 = lat1 * Math.PI/180
     const φ2 = lat2 * Math.PI/180
     const Δφ = (lat2-lat1) * Math.PI/180
@@ -86,10 +85,10 @@ const RouteManager = () => {
               Math.sin(Δλ/2) * Math.sin(Δλ/2)
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
 
-    return R * c // Distancia en metros
+    return R * c 
   }
 
-  // Verificar si el usuario está cerca de un lugar (100 metros)
+ 
   const isNearPlace = (place) => {
     if (!location || !place.latitude || !place.longitude) return false
     
@@ -100,41 +99,40 @@ const RouteManager = () => {
       place.longitude
     )
     
-    return distance <= 100 // 100 metros de proximidad
+    return distance <= 100 
   }
 
-  // Manejar inicio de desafío
+
   const handleStartChallenge = (place) => {
     setChallengePlace(place)
     setShowChallengeModal(true)
   }
 
-  // Manejar completado de desafío
+  
   const handleChallengeComplete = (challengeData) => {
     console.log('Desafío completado:', challengeData)
     
-    // Marcar el lugar como completado
+
     const placeIndex = route.places.findIndex(p => p.name === challengeData.place.name)
     if (placeIndex !== -1) {
       setCompletedPlaces(prev => new Set([...prev, placeIndex]))
     }
-    
-    // Cerrar el modal
+   
     setShowChallengeModal(false)
     setChallengePlace(null)
   }
 
-  // Marcar un lugar como completado
+  
   const handleCompletePlace = (placeIndex) => {
     setCompletedPlaces(prev => new Set([...prev, placeIndex]))
     
-    // Si es el lugar actual, avanzar al siguiente
+   
     if (placeIndex === currentPlaceIndex && placeIndex < (route?.places.length - 1)) {
       setCurrentPlaceIndex(placeIndex + 1)
     }
   }
 
-  // Marcar un lugar como no completado
+ 
   const handleUncompletePlace = (placeIndex) => {
     setCompletedPlaces(prev => {
       const newSet = new Set(prev)
@@ -143,28 +141,24 @@ const RouteManager = () => {
     })
   }
 
-  // Calcular progreso de la ruta
+  
   const getRouteProgress = () => {
     if (!route?.places) return 0
     return Math.round((completedPlaces.size / route.places.length) * 100)
   }
 
-  // Obtener el siguiente lugar a visitar
+
   const getNextPlace = () => {
     if (!route?.places) return null
     return route.places[currentPlaceIndex]
   }
 
-  // Obtener lugares completados
+ 
   const getCompletedPlaces = () => {
     if (!route?.places) return []
     return Array.from(completedPlaces).map(index => route.places[index])
   }
 
-  // No cargar ruta automáticamente - el usuario debe seleccionar una
-  // useEffect(() => {
-  //   handleGenerateRoute()
-  // }, [])
 
   return (
     <div className="space-y-6">

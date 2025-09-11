@@ -1,9 +1,9 @@
 import { apiRequest } from './config.js'
 
-// Función para crear una familia
+
 export const createFamily = async (familyData) => {
   try {
-    // Enviar datos de la familia al backend
+  
     const response = await apiRequest('gamification/family/create', 'POST', familyData)
     
     return {
@@ -20,10 +20,9 @@ export const createFamily = async (familyData) => {
   }
 }
 
-// Función para obtener estadísticas de la familia
 export const getFamilyStats = async (familyId) => {
   try {
-    // Obtener estadísticas de la familia
+   
     const response = await apiRequest(`gamification/family/${familyId}/stats`)
     
     return {
@@ -40,11 +39,10 @@ export const getFamilyStats = async (familyId) => {
   }
 }
 
-// Función para simular puntos ganados (para testing)
 export const simulatePoints = () => {
-  // Simular puntos ganados por completar aventura
-  const points = Math.floor(Math.random() * 50) + 10 // 10-60 puntos
-  const coins = Math.floor(Math.random() * 3) + 1 // 1-4 monedas
+
+  const points = Math.floor(Math.random() * 50) + 10 
+  const coins = Math.floor(Math.random() * 3) + 1 
   
   return {
     points: points,

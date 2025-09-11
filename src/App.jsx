@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import HealthCheck from '@components/ui/HealthCheck/HealthCheck'
 import AdventureDisplay from '@components/ui/AdventureDisplay/AdventureDisplay'
 import GamificationPanel from '@components/ui/GamificationPanel/GamificationPanel'
 import RouteManager from '@components/ui/RouteManager/RouteManager'

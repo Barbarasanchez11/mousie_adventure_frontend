@@ -1,10 +1,7 @@
 import { apiRequest } from './config.js'
 import { storyService } from './story.js'
 
-/**
- * Servicio para manejar desafíos del Ratoncito Pérez
- * Se conecta con el backend para obtener desafíos generados por IA
- */
+
 class ChallengeService {
   constructor() {
     this.baseURL = 'adventure'
@@ -12,33 +9,26 @@ class ChallengeService {
 
   /**
    * Generar un desafío para un lugar específico
-   * @param {string} placeName - Nombre del lugar
-   * @param {Array<number>} childrenAges - Edades de los niños
-   * @param {Object} placeData - Datos del lugar (opcional)
-   * @returns {Promise<Object>} - Desafío generado
+   * @param {string} placeName 
+   * @param {Array<number>} childrenAges 
+   * @param {Object} placeData 
+   * @returns {Promise<Object>} 
    */
   async generateChallenge(placeName, childrenAges = [6, 8], placeData = null) {
     try {
-      console.log(`🎯 Generando desafío para ${placeName} con edades ${childrenAges}`)
       
-      // Usar el servicio de historias para obtener datos reales del backend
       const coordinates = {
         latitude: placeData?.latitude || 40.4168,
         longitude: placeData?.longitude || -3.7038
       }
 
-      // Obtener historia, curiosidad y desafío del backend
+    
       const [storyResult, curiosityResult, challengeResult] = await Promise.all([
         storyService.getStory(placeName, childrenAges, coordinates),
         storyService.getCuriosity(placeName, childrenAges, coordinates),
         storyService.getChallenge(placeName, childrenAges, coordinates)
       ])
 
-      console.log(`✅ Datos obtenidos del backend para ${placeName}:`, {
-        story: storyResult.success,
-        curiosity: curiosityResult.success,
-        challenge: challengeResult.success
-      })
 
       const finalData = {
         success: true,
@@ -102,16 +92,16 @@ class ChallengeService {
    */
   async validateChallenge(placeName, challenge, userAnswer, familyId = 'default-family') {
     try {
-      // Registrar la visita al lugar en gamificación
+     
       if (familyId) {
         await this.recordPlaceVisit(familyId, placeName)
       }
 
-      // Simular validación (en un sistema real, esto se haría con IA)
+      
       const isCorrect = this.simulateChallengeValidation(placeName, challenge, userAnswer)
       
       if (isCorrect && familyId) {
-        // Registrar desafío completado en gamificación
+       
         await this.recordChallengeCompletion(familyId)
       }
 
@@ -196,7 +186,6 @@ class ChallengeService {
    * @returns {Object} - Desafío de fallback
    */
   getFallbackChallenge(placeName, childrenAges = [6, 8]) {
-    console.log(`🔄 Usando desafío de fallback para ${placeName}`)
     
     const fallbackChallenges = {
       'Plaza Mayor': [

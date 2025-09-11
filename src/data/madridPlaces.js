@@ -99,7 +99,7 @@ export const MADRID_PLACES = {
   }
 }
 
-// Rutas predefinidas entre lugares
+
 export const MADRID_ROUTES = {
   "Plaza Mayor": ["Puerta del Sol", "Mercado de San Miguel"],
   "Puerta del Sol": ["Plaza Mayor", "Palacio Real", "Parque del Retiro"],
@@ -110,7 +110,7 @@ export const MADRID_ROUTES = {
   "Mercado de San Miguel": ["Plaza Mayor"]
 }
 
-// Función para obtener lugares en formato para el mapa
+
 export const getMadridPlacesForMap = () => {
   return Object.values(MADRID_PLACES).map(place => ({
     ...place,
@@ -119,7 +119,7 @@ export const getMadridPlacesForMap = () => {
   }))
 }
 
-// Función para obtener rutas en formato para el mapa
+
 export const getMadridRoutesForMap = () => {
   const routes = []
   

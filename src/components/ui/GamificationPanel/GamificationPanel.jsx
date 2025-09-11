@@ -3,11 +3,11 @@ import ScoreDisplay from '../ScoreDisplay/ScoreDisplay'
 import AchievementBadge from '../AchievementBadge/AchievementBadge'
 import { simulatePoints } from '@services/api/gamification'
 
-// Componente principal de gamificación
+
 const GamificationPanel = () => {
-  const [points, setPoints] = useState(0) // Puntos totales
-  const [coins, setCoins] = useState(0) // Monedas totales
-  const [showAnimation, setShowAnimation] = useState(false) // Animación de puntos
+  const [points, setPoints] = useState(0) 
+  const [coins, setCoins] = useState(0) 
+  const [showAnimation, setShowAnimation] = useState(false) 
   const [achievements, setAchievements] = useState([
     {
       id: 1,
@@ -43,42 +43,42 @@ const GamificationPanel = () => {
     }
   ])
 
-  // Función para simular ganar puntos
+
   const earnPoints = () => {
     const newPoints = simulatePoints()
     
-    // Mostrar animación
+   
     setShowAnimation(true)
     
-    // Actualizar puntos y monedas
+   
     setPoints(prev => prev + newPoints.points)
     setCoins(prev => prev + newPoints.coins)
     
-    // Verificar logros desbloqueados
+  
     checkAchievements(points + newPoints.points, coins + newPoints.coins)
     
-    // Quitar animación después de 2 segundos
+   
     setTimeout(() => {
       setShowAnimation(false)
     }, 2000)
   }
 
-  // Función para verificar logros
+ 
   const checkAchievements = (totalPoints, totalCoins) => {
     setAchievements(prev => prev.map(achievement => {
       let shouldUnlock = false
       
       switch (achievement.id) {
-        case 1: // Primera Aventura
+        case 1: 
           shouldUnlock = totalPoints >= 25
           break
-        case 2: // Explorador Madrid
+        case 2:
           shouldUnlock = totalPoints >= 50
           break
-        case 3: // Preguntón Curioso
+        case 3:
           shouldUnlock = totalPoints >= 30
           break
-        case 4: // Coleccionista de Monedas
+        case 4:
           shouldUnlock = totalCoins >= 10
           break
         default:
@@ -92,7 +92,7 @@ const GamificationPanel = () => {
     }))
   }
 
-  // Simular puntos iniciales al cargar
+ 
   useEffect(() => {
     const initialPoints = simulatePoints()
     setPoints(initialPoints.points)

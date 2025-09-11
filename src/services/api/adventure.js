@@ -3,7 +3,7 @@ import { apiRequest } from './config.js'
 // Función para iniciar una aventura
 export const startAdventure = async (location, childAges) => {
   try {
-    // Intentar conectar con el backend real
+   
     const response = await apiRequest('adventure/start', 'POST', {
       latitude: location.latitude,
       longitude: location.longitude,
@@ -17,8 +17,6 @@ export const startAdventure = async (location, childAges) => {
   } catch (error) {
     console.error('Error al iniciar aventura:', error)
     
-    // Fallback: devolver aventura de prueba si el backend no está disponible
-    console.log('📍 Modo de prueba: Mostrando aventura GPS simulada')
     
     return {
       success: true,
@@ -37,10 +35,10 @@ export const startAdventure = async (location, childAges) => {
   }
 }
 
-// Función para probar aventura (sin GPS)
+
 export const testAdventure = async () => {
   try {
-    // Intentar conectar con el backend real
+   
     const response = await apiRequest('adventure/test', 'GET')
     
     if (response.success) {
@@ -50,7 +48,7 @@ export const testAdventure = async () => {
   } catch (error) {
     console.error('Error al probar aventura:', error)
     
-    // Si es un error 500 del backend, mostrar el error específico
+    
     if (error.message.includes('500')) {
       return {
         success: false,
@@ -59,8 +57,7 @@ export const testAdventure = async () => {
       }
     }
     
-    // Fallback: devolver aventura de prueba si el backend no está disponible
-    console.log('🧪 Modo de prueba: Mostrando aventura simulada')
+   
     
     return {
       success: true,

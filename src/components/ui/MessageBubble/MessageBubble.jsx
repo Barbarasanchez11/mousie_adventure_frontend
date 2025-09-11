@@ -1,13 +1,13 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-// Componente para mostrar una burbuja de mensaje en el chat
+
 const MessageBubble = ({ message }) => {
-  // Determina si el mensaje es del usuario o del bot para aplicar estilos diferentes
+
   const isUser = message.sender === 'user'
   const bubbleClasses = isUser
-    ? 'bg-primary-500 text-white self-end rounded-br-none' // Estilo para mensajes del usuario
-    : 'bg-gray-100 text-gray-800 self-start rounded-bl-none' // Estilo para mensajes del bot
+    ? 'bg-primary-500 text-white self-end rounded-br-none' 
+    : 'bg-gray-100 text-gray-800 self-start rounded-bl-none'
   const textClasses = isUser ? 'text-white' : 'text-gray-800'
   const timestampClasses = isUser ? 'text-primary-200' : 'text-gray-500'
 

@@ -1,9 +1,6 @@
 import { apiRequest } from './config.js'
 
-/**
- * Servicio para obtener historias del Ratoncito Pérez desde el backend
- * Usa el endpoint de Q&A que funciona correctamente
- */
+
 class StoryService {
   constructor() {
     this.baseURL = 'qa'
@@ -11,14 +8,14 @@ class StoryService {
 
   /**
    * Obtener una historia del Ratoncito Pérez para un lugar específico
-   * @param {string} placeName - Nombre del lugar
-   * @param {Array<number>} childrenAges - Edades de los niños
-   * @param {Object} coordinates - Coordenadas del lugar
-   * @returns {Promise<Object>} - Historia generada
+   * @param {string} placeName -
+   * @param {Array<number>} childrenAges 
+   * @param {Object} coordinates 
+   * @returns {Promise<Object>} 
    */
   async getStory(placeName, childrenAges = [6, 8], coordinates = null) {
     try {
-      console.log(`📖 Obteniendo historia para ${placeName} con edades ${childrenAges}`)
+      
       
       const requestData = {
         question: `Cuéntame una historia mágica sobre ${placeName}`,
@@ -31,7 +28,7 @@ class StoryService {
       const response = await apiRequest(`${this.baseURL}/ask`, 'POST', requestData)
       
       if (response.success) {
-        console.log(`✅ Historia obtenida para ${placeName}:`, response.data)
+       
         return {
           success: true,
           data: {
@@ -54,14 +51,13 @@ class StoryService {
 
   /**
    * Obtener una curiosidad sobre un lugar
-   * @param {string} placeName - Nombre del lugar
-   * @param {Array<number>} childrenAges - Edades de los niños
-   * @param {Object} coordinates - Coordenadas del lugar
-   * @returns {Promise<Object>} - Curiosidad generada
+   * @param {string} placeName 
+   * @param {Array<number>} childrenAges 
+   * @param {Object} coordinates 
+   * @returns {Promise<Object>} 
    */
   async getCuriosity(placeName, childrenAges = [6, 8], coordinates = null) {
     try {
-      console.log(`🔍 Obteniendo curiosidad para ${placeName}`)
       
       const requestData = {
         question: `¿Qué curiosidad interesante tiene ${placeName}?`,
@@ -74,7 +70,7 @@ class StoryService {
       const response = await apiRequest(`${this.baseURL}/ask`, 'POST', requestData)
       
       if (response.success) {
-        console.log(`✅ Curiosidad obtenida para ${placeName}:`, response.data)
+      
         return {
           success: true,
           data: {
@@ -103,7 +99,6 @@ class StoryService {
    */
   async getChallenge(placeName, childrenAges = [6, 8], coordinates = null) {
     try {
-      console.log(`🎯 Obteniendo desafío para ${placeName}`)
       
       const requestData = {
         question: `Crea un desafío corto y divertido para niños de ${childrenAges.join(' y ')} años en ${placeName}. Máximo 2-3 oraciones.`,
@@ -116,7 +111,7 @@ class StoryService {
       const response = await apiRequest(`${this.baseURL}/ask`, 'POST', requestData)
       
       if (response.success) {
-        console.log(`✅ Desafío obtenido para ${placeName}:`, response.data)
+      
         return {
           success: true,
           data: {
@@ -143,7 +138,7 @@ class StoryService {
    * @returns {Object} - Historia de fallback
    */
   getFallbackStory(placeName, childrenAges = [6, 8]) {
-    console.log(`🔄 Usando historia de fallback para ${placeName}`)
+   
     
     const fallbackStories = {
       'Plaza Mayor': '¡Hola, familia! Soy el Ratoncito Pérez y te voy a contar un secreto sobre Plaza Mayor. Esta plaza mágica ha visto pasar siglos de historia. ¿Sabías que aquí se celebraban las fiestas más importantes de Madrid? ¡Y cada piedra tiene una historia que contar!',

@@ -1,6 +1,3 @@
-import React from 'react'
-
-// Componente para mostrar puntos y monedas
 const ScoreDisplay = ({ points = 0, coins = 0, showAnimation = false }) => {
   return (
     <div className="bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-2xl p-4 sm:p-6 shadow-lg border-2 border-yellow-300">

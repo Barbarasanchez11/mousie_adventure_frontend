@@ -3,7 +3,7 @@ import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 
-// Fix para los iconos de Leaflet
+
 delete L.Icon.Default.prototype._getIconUrl
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-icon-2x.png',
@@ -11,7 +11,6 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
 })
 
-// Componente para centrar el mapa en la ubicación del usuario
 const MapCenter = ({ center, zoom }) => {
   const map = useMap()
   
@@ -24,7 +23,7 @@ const MapCenter = ({ center, zoom }) => {
   return null
 }
 
-// Componente principal del mapa interactivo
+
 const InteractiveMap = ({ 
   userLocation = null, 
   routePlaces = [], 
@@ -34,11 +33,11 @@ const InteractiveMap = ({
   className = "h-96 w-full",
   childrenAges = [6, 8]
 }) => {
-  const [mapCenter, setMapCenter] = useState([40.4168, -3.7038]) // Madrid por defecto
+  const [mapCenter, setMapCenter] = useState([40.4168, -3.7038]) 
   const [mapZoom, setMapZoom] = useState(13)
   const [hoveredPlace, setHoveredPlace] = useState(null)
 
-  // Centrar el mapa en la ubicación del usuario si está disponible
+ 
   useEffect(() => {
     if (userLocation) {
       setMapCenter([userLocation.latitude, userLocation.longitude])
@@ -46,7 +45,7 @@ const InteractiveMap = ({
     }
   }, [userLocation])
 
-  // Crear iconos personalizados
+
   const createCustomIcon = (color, icon, isHovered = false) => {
     return L.divIcon({
       className: 'custom-div-icon',
@@ -71,27 +70,27 @@ const InteractiveMap = ({
     })
   }
 
-  // Iconos para diferentes tipos de lugares
+
   const getPlaceIcon = (place, isHovered = false) => {
     if (place.type === 'start') {
-      return createCustomIcon('#10B981', '🏁', isHovered) // Verde para inicio
+      return createCustomIcon('#10B981', '🏁', isHovered) 
     } else if (place.type === 'end') {
-      return createCustomIcon('#EF4444', '🏆', isHovered) // Rojo para final
+      return createCustomIcon('#EF4444', '🏆', isHovered) 
     } else if (place.type === 'checkpoint') {
-      return createCustomIcon('#3B82F6', '📍', isHovered) // Azul para checkpoints
+      return createCustomIcon('#3B82F6', '📍', isHovered) 
     } else {
-      return createCustomIcon('#8B5CF6', '🎯', isHovered) // Púrpura para lugares normales
+      return createCustomIcon('#8B5CF6', '🎯', isHovered) 
     }
   }
 
-  // Manejar clic en un lugar
+ 
   const handlePlaceClick = (place) => {
     if (onPlaceSelect) {
       onPlaceSelect(place)
     }
   }
 
-  // Crear polilínea para la ruta
+ 
   const routeCoordinates = routePlaces.map(place => [place.latitude, place.longitude])
 
   return (

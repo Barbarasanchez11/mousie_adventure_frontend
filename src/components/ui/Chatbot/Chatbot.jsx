@@ -199,7 +199,7 @@ const Chatbot = ({ isOpen, onClose, coordinates, placeName, childrenAges = [6, 8
                   message.type === 'user'
                     ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white'
                     : message.isStory
-                    ? 'bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 shadow-sm'
+                    ? 'bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 shadow-sm max-h-64 overflow-y-auto story-scroll'
                     : message.isCuriosity
                     ? 'bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 shadow-sm'
                     : 'bg-white border border-gray-200 shadow-sm'

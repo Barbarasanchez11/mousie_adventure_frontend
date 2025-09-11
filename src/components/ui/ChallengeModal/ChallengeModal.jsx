@@ -214,14 +214,8 @@ const ChallengeModal = ({
                   <span className="text-2xl animate-pulse-glow">🎯</span>
                   <div className="flex-1">
                     <h3 className="font-bold text-gray-800 mb-3 text-lg">Tu Desafío</h3>
-                    <div className="max-h-48 overflow-y-auto pr-2 story-scroll relative">
-                      {/* Indicador de scroll */}
-                      <div className="absolute top-2 right-2 text-xs text-gray-400 bg-white/80 rounded-full px-2 py-1 shadow-sm z-10">
-                        📜 Scroll
-                      </div>
-                      {/* Gradiente inferior para indicar más contenido */}
-                      <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-yellow-50 to-transparent pointer-events-none z-10"></div>
-                      <p className="text-gray-700 text-sm leading-relaxed pt-6 pb-2">
+                    <div className="max-h-64 overflow-y-auto border border-gray-200 rounded-lg p-4 bg-white/80">
+                      <p className="text-gray-700 text-sm leading-relaxed">
                         {challenge.challenge}
                       </p>
                     </div>

@@ -111,16 +111,92 @@
   }
 
   /* Scrollbar personalizado para la historia del desafío */
+  .story-scroll {
+    /* Forzar scrollbar siempre visible */
+    overflow-y: scroll !important;
+    scrollbar-width: auto !important;
+    scrollbar-color: #8b5cf6 #f1f5f9 !important;
+  }
+
   .story-scroll::-webkit-scrollbar {
-    @apply w-2;
+    width: 14px !important;
+    display: block !important;
   }
 
   .story-scroll::-webkit-scrollbar-track {
-    @apply bg-gray-100 rounded-full;
+    background: #f1f5f9 !important;
+    border-radius: 7px !important;
+    border: 1px solid #e2e8f0 !important;
   }
 
   .story-scroll::-webkit-scrollbar-thumb {
-    @apply bg-purple-400 rounded-full hover:bg-purple-500;
+    background: #8b5cf6 !important;
+    border-radius: 7px !important;
+    border: 2px solid #f1f5f9 !important;
+    min-height: 20px !important;
+  }
+
+  .story-scroll::-webkit-scrollbar-thumb:hover {
+    background: #7c3aed !important;
+  }
+
+  .story-scroll::-webkit-scrollbar-corner {
+    background: #f1f5f9 !important;
+  }
+
+  /* Asegurar que el scrollbar sea visible en todos los casos */
+  .story-scroll {
+    /* Forzar scrollbar en navegadores que lo ocultan por defecto */
+    -ms-overflow-style: scrollbar !important;
+    scrollbar-gutter: stable !important;
+  }
+
+  /* Fallback para navegadores que no soportan scrollbar personalizado */
+  .story-scroll::-webkit-scrollbar {
+    -webkit-appearance: none !important;
+    width: 14px !important;
+  }
+
+  /* Estilos para el chatbot */
+  .chatbot-overlay {
+    z-index: 9999 !important;
+  }
+
+  .chatbot-content {
+    z-index: 10000 !important;
+    position: relative;
+  }
+
+  .chatbot-button {
+    z-index: 50 !important;
+    position: fixed !important;
+  }
+
+  /* Animación para el botón del chatbot */
+  .chatbot-button:hover {
+    transform: scale(1.1) !important;
+  }
+
+  /* Animación de typing */
+  @keyframes typing {
+    0%, 60%, 100% {
+      transform: translateY(0);
+    }
+    30% {
+      transform: translateY(-10px);
+    }
+  }
+
+  .typing-dot {
+    animation: typing 1.4s infinite;
+  }
+
+  .typing-dot:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+
+  .typing-dot:nth-child(3) {
+    animation-delay: 0.4s;
   }
   
   /* Animation classes */

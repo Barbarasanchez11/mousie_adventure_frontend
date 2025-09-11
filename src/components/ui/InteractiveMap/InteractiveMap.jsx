@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
+import ChatbotButton from '../Chatbot/ChatbotButton.jsx'
 
 // Fix para los iconos de Leaflet
 delete L.Icon.Default.prototype._getIconUrl
@@ -31,7 +32,8 @@ const InteractiveMap = ({
   onPlaceSelect = null,
   selectedPlace = null,
   showRoute = true,
-  className = "h-96 w-full"
+  className = "h-96 w-full",
+  childrenAges = [6, 8]
 }) => {
   const [mapCenter, setMapCenter] = useState([40.4168, -3.7038]) // Madrid por defecto
   const [mapZoom, setMapZoom] = useState(13)
@@ -335,6 +337,13 @@ const InteractiveMap = ({
           )}
         </div>
       </div>
+
+      {/* Botón flotante del chatbot */}
+      <ChatbotButton
+        coordinates={userLocation}
+        placeName={selectedPlace?.name || 'Madrid'}
+        childrenAges={childrenAges}
+      />
     </div>
   )
 }

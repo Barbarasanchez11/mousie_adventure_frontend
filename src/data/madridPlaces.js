@@ -1,4 +1,3 @@
-// Datos reales de lugares de Madrid para el mapa
 export const MADRID_PLACES = {
   "Plaza Mayor": {
     id: "plaza_mayor",
@@ -142,7 +141,7 @@ export const getMadridRoutesForMap = () => {
   return routes
 }
 
-// Función para obtener una ruta específica
+
 export const getRouteBetweenPlaces = (fromPlace, toPlace) => {
   const fromPlaceData = MADRID_PLACES[fromPlace]
   const toPlaceData = MADRID_PLACES[toPlace]

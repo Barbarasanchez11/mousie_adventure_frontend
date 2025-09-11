@@ -387,7 +387,7 @@ const RouteManager = () => {
                               e.stopPropagation()
                               handleCompletePlace(index)
                             }}
-                            className="bg-green-500 hover:bg-green-600 text-white px-2 py-2 rounded-lg text-xs font-medium transition-colors flex-1 min-w-0 xs:px-0.5 xs:text-[10px]"
+                            className="bg-green-500 hover:bg-green-600 text-white py-1.5 rounded-lg font-medium transition-colors flex-1 min-w-0 px-0.5 text-[10px] xs:px-2 xs:py-1 xs:text-xs"
                           >
                             <span className="block xs:hidden">✅ Completado</span>
                             <span className="hidden xs:block">✅ Marcar como completado</span>
@@ -398,7 +398,7 @@ const RouteManager = () => {
                               e.stopPropagation()
                               handleUncompletePlace(index)
                             }}
-                            className="bg-gray-500 hover:bg-gray-600 text-white px-2 py-2 rounded-lg text-xs font-medium transition-colors flex-1 min-w-0 xs:px-0.5 xs:text-[10px]"
+                            className="bg-gray-500 hover:bg-gray-600 text-white py-1.5 rounded-lg font-medium transition-colors flex-1 min-w-0 px-0.5 text-[10px] xs:px-2 xs:py-1 xs:text-xs"
                           >
                             <span className="block xs:hidden">↩️ Desmarcar</span>
                             <span className="hidden xs:block">↩️ Desmarcar</span>
@@ -411,7 +411,7 @@ const RouteManager = () => {
                               e.stopPropagation()
                               handleStartChallenge(place)
                             }}
-                            className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-2 rounded-lg text-xs font-medium transition-colors flex-1 min-w-0 xs:px-0.5 xs:text-[10px]"
+                            className="bg-blue-500 hover:bg-blue-600 text-white py-1.5 rounded-lg font-medium transition-colors flex-1 min-w-0 px-0.5 text-[10px] xs:px-2 xs:py-1 xs:text-xs"
                           >
                             <span className="block xs:hidden">🎯 Desafío</span>
                             <span className="hidden xs:block">🎯 Iniciar Desafío</span>

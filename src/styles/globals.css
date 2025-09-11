@@ -143,6 +143,29 @@
   .animate-pulse-glow {
     animation: pulse-glow 2s ease-in-out infinite;
   }
+
+  /* Modal z-index override para estar por encima de Leaflet */
+  .challenge-modal-overlay {
+    z-index: 9999 !important;
+  }
+
+  .challenge-modal-content {
+    z-index: 10000 !important;
+    position: relative;
+  }
+
+  /* Asegurar que Leaflet no interfiera con el modal */
+  .leaflet-container {
+    z-index: 1 !important;
+  }
+
+  .leaflet-control-container {
+    z-index: 2 !important;
+  }
+
+  .leaflet-popup {
+    z-index: 3 !important;
+  }
   
   /* Loading states */
   .loading-skeleton {

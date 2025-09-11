@@ -17,7 +17,6 @@ const ChallengeModal = ({
   const [showStory, setShowStory] = useState(true) // Mostrar historia primero
   const [acceptedChallenge, setAcceptedChallenge] = useState(false) // Usuario aceptó el reto
 
-  // Generar desafío cuando se abre el modal
   useEffect(() => {
     if (isOpen && place) {
       generateChallenge()

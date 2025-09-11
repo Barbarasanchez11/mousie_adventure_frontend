@@ -380,16 +380,17 @@ const RouteManager = () => {
                       </div>
 
                       {/* Botones de acción */}
-                      <div className="flex gap-2">
+                      <div className="flex flex-col xs:flex-row gap-2">
                         {!isCompleted ? (
                           <button
                             onClick={(e) => {
                               e.stopPropagation()
                               handleCompletePlace(index)
                             }}
-                            className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm font-medium transition-colors"
+                            className="bg-green-500 hover:bg-green-600 text-white px-2 py-2 rounded-lg text-xs font-medium transition-colors flex-1 min-w-0 xs:px-0.5 xs:text-[10px]"
                           >
-                            ✅ Marcar como completado
+                            <span className="block xs:hidden">✅ Completado</span>
+                            <span className="hidden xs:block">✅ Marcar como completado</span>
                           </button>
                         ) : (
                           <button
@@ -397,9 +398,10 @@ const RouteManager = () => {
                               e.stopPropagation()
                               handleUncompletePlace(index)
                             }}
-                            className="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded text-sm font-medium transition-colors"
+                            className="bg-gray-500 hover:bg-gray-600 text-white px-2 py-2 rounded-lg text-xs font-medium transition-colors flex-1 min-w-0 xs:px-0.5 xs:text-[10px]"
                           >
-                            ↩️ Desmarcar
+                            <span className="block xs:hidden">↩️ Desmarcar</span>
+                            <span className="hidden xs:block">↩️ Desmarcar</span>
                           </button>
                         )}
                         
@@ -409,9 +411,10 @@ const RouteManager = () => {
                               e.stopPropagation()
                               handleStartChallenge(place)
                             }}
-                            className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm font-medium transition-colors"
+                            className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-2 rounded-lg text-xs font-medium transition-colors flex-1 min-w-0 xs:px-0.5 xs:text-[10px]"
                           >
-                            🎯 Iniciar Desafío
+                            <span className="block xs:hidden">🎯 Desafío</span>
+                            <span className="hidden xs:block">🎯 Iniciar Desafío</span>
                           </button>
                         )}
                       </div>

@@ -97,7 +97,12 @@ class RatoncitoAdventure {
       throw new Error(response.message || 'Error al crear familia')
     } catch (error) {
       console.error('Error al crear familia:', error)
-      throw error
+      // Devolver el error en lugar de lanzarlo
+      return {
+        success: false,
+        message: error.message,
+        data: null
+      }
     }
   }
 

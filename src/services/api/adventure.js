@@ -39,22 +39,42 @@ export const startAdventure = async (location, childAges) => {
 
 // Función para probar aventura (sin GPS)
 export const testAdventure = async () => {
-  // Por ahora, siempre devolver una aventura de prueba
-  // Esto evita problemas con el backend que no está configurado correctamente
-  console.log('🧪 Modo de prueba: Mostrando aventura simulada')
-  
-  return {
-    success: true,
-    data: {
-      title: "Aventura de Prueba del Ratoncito Pérez",
-      story: "¡Hola! Soy el Ratoncito Pérez y te voy a contar una historia mágica. En el corazón de Madrid, hay un lugar especial donde los dientes de los niños se convierten en tesoros. ¿Quieres descubrirlo conmigo?",
-      challenge: "Busca en tu casa un diente que se te haya caído recientemente. Si no tienes ninguno, ¡puedes usar un diente de leche imaginario!",
-      curiosity: "¿Sabías que el Ratoncito Pérez nació en Madrid en 1894? Fue creado por el escritor Luis Coloma para consolar al futuro rey Alfonso XIII cuando perdió su primer diente.",
-      reward: "Por completar esta aventura, ganarás 25 puntos y 3 monedas mágicas. ¡Sigue explorando para conseguir más recompensas!",
-      location: "Madrid, España",
-      duration: "15-20 minutos",
-      difficulty: "Fácil",
-      age_range: "3-12 años"
+  try {
+    // Intentar conectar con el backend real
+    const response = await apiRequest('adventure/test', 'GET')
+    
+    if (response.success) {
+      return response
+    }
+    throw new Error(response.message || 'Error al probar aventura')
+  } catch (error) {
+    console.error('Error al probar aventura:', error)
+    
+    // Si es un error 500 del backend, mostrar el error específico
+    if (error.message.includes('500')) {
+      return {
+        success: false,
+        message: `Error del backend: ${error.message}`,
+        data: null
+      }
+    }
+    
+    // Fallback: devolver aventura de prueba si el backend no está disponible
+    console.log('🧪 Modo de prueba: Mostrando aventura simulada')
+    
+    return {
+      success: true,
+      data: {
+        title: "Aventura de Prueba del Ratoncito Pérez",
+        story: "¡Hola! Soy el Ratoncito Pérez y te voy a contar una historia mágica. En el corazón de Madrid, hay un lugar especial donde los dientes de los niños se convierten en tesoros. ¿Quieres descubrirlo conmigo?",
+        challenge: "Busca en tu casa un diente que se te haya caído recientemente. Si no tienes ninguno, ¡puedes usar un diente de leche imaginario!",
+        curiosity: "¿Sabías que el Ratoncito Pérez nació en Madrid en 1894? Fue creado por el escritor Luis Coloma para consolar al futuro rey Alfonso XIII cuando perdió su primer diente.",
+        reward: "Por completar esta aventura, ganarás 25 puntos y 3 monedas mágicas. ¡Sigue explorando para conseguir más recompensas!",
+        location: "Madrid, España",
+        duration: "15-20 minutos",
+        difficulty: "Fácil",
+        age_range: "3-12 años"
+      }
     }
   }
 }

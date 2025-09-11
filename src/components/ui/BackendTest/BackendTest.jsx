@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { generateRoute, createFamily, getFamilyStats } from '@services/api/route'
+import { generateRoute, createFamily } from '@services/api/route'
 
 // Componente para probar la conexión real con el backend
 const BackendTest = () => {
@@ -41,17 +41,22 @@ const BackendTest = () => {
   const testCreateFamily = async () => {
     setLoading(true)
     try {
+      // Intentar diferentes formatos de datos para ver cuál acepta el backend
       const familyData = {
-        name: 'Familia de Prueba',
+        family_id: 'family_' + Date.now(), // Generar un ID único
+        family_name: 'Familia de Prueba', // Usar family_name como espera el backend
         children: [
           { name: 'Juan', age: 8 },
           { name: 'María', age: 5 }
         ]
       }
       
+      console.log('🔍 Debug Crear Familia - Enviando:', familyData)
       const response = await createFamily(familyData)
+      console.log('🔍 Debug Crear Familia - Respuesta:', response)
       addResult('Crear Familia', response.success, response.message, response.data)
     } catch (error) {
+      console.error('🚨 Error en Crear Familia:', error)
       addResult('Crear Familia', false, `Error: ${error.message}`)
     } finally {
       setLoading(false)
@@ -77,14 +82,25 @@ const BackendTest = () => {
     }
   }
 
-  // Probar estadísticas de familia
-  const testFamilyStats = async () => {
+  // Probar aventura (ya implementada)
+  const testAdventure = async () => {
     setLoading(true)
     try {
-      const response = await getFamilyStats()
-      addResult('Estadísticas Familia', response.success, response.message, response.data)
+      const response = await fetch('http://localhost:8000/adventure/test')
+      const data = await response.json()
+      
+      console.log('🔍 Debug Aventura Test:', { status: response.status, data })
+      
+      if (response.ok) {
+        addResult('Aventura Test', true, 'Aventura de prueba funcionando', data)
+      } else {
+        // Mostrar el error específico del backend
+        const errorMessage = data.detail || data.message || data.error || 'Error desconocido'
+        addResult('Aventura Test', false, `Error ${response.status}: ${errorMessage}`, data)
+      }
     } catch (error) {
-      addResult('Estadísticas Familia', false, `Error: ${error.message}`)
+      console.error('🚨 Error en Aventura Test:', error)
+      addResult('Aventura Test', false, `Error de conexión: ${error.message}`)
     } finally {
       setLoading(false)
     }
@@ -99,7 +115,7 @@ const BackendTest = () => {
     await new Promise(resolve => setTimeout(resolve, 1000))
     await testGenerateRoute()
     await new Promise(resolve => setTimeout(resolve, 1000))
-    await testFamilyStats()
+    await testAdventure()
   }
 
   return (
@@ -135,11 +151,11 @@ const BackendTest = () => {
         </button>
         
         <button
-          onClick={testFamilyStats}
+          onClick={testAdventure}
           disabled={loading}
           className="px-4 py-2 bg-orange-500 hover:bg-orange-600 disabled:bg-orange-300 text-white rounded-lg text-sm font-medium transition-colors"
         >
-          📊 Estadísticas
+          🎭 Aventura Test
         </button>
       </div>
 

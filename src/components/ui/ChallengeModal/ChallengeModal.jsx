@@ -14,6 +14,8 @@ const ChallengeModal = ({
   const [showResult, setShowResult] = useState(false)
   const [result, setResult] = useState(null)
   const [error, setError] = useState(null)
+  const [showStory, setShowStory] = useState(true) // Mostrar historia primero
+  const [acceptedChallenge, setAcceptedChallenge] = useState(false) // Usuario aceptó el reto
 
   // Generar desafío cuando se abre el modal
   useEffect(() => {
@@ -102,11 +104,23 @@ const ChallengeModal = ({
     setShowResult(false)
     setResult(null)
     setError(null)
+    setShowStory(true)
+    setAcceptedChallenge(false)
     onClose()
   }
 
   const handleNewChallenge = () => {
+    setShowStory(true)
+    setAcceptedChallenge(false)
+    setUserAnswer('')
+    setShowResult(false)
+    setResult(null)
     generateChallenge()
+  }
+
+  const handleAcceptChallenge = () => {
+    setAcceptedChallenge(true)
+    setShowStory(false)
   }
 
   if (!isOpen) return null
@@ -159,24 +173,42 @@ const ChallengeModal = ({
             </div>
           )}
 
-          {challenge && !showResult && (
+          {/* FASE 1: HISTORIA DEL RATONCITO PÉREZ */}
+          {challenge && showStory && !acceptedChallenge && (
             <div className="space-y-6">
-              {/* Story from Backend - PRIMERO */}
+              {/* Story from Backend */}
               {challenge.story && (
                 <div className="bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-xl p-4 animate-fade-in">
                   <div className="flex items-start gap-3">
                     <span className="text-2xl animate-bounce">🐭</span>
                     <div className="flex-1">
-                      <h3 className="font-bold text-gray-800 mb-2">Historia del Ratoncito Pérez</h3>
-                      <p className="text-gray-700 text-sm leading-relaxed">
-                        {challenge.story}
-                      </p>
+                      <h3 className="font-bold text-gray-800 mb-4 text-lg">Historia del Ratoncito Pérez</h3>
+                      <div className="max-h-64 overflow-y-auto pr-2 story-scroll">
+                        <p className="text-gray-700 text-sm leading-relaxed">
+                          {challenge.story}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
               )}
 
-              {/* Challenge Info - SEGUNDO */}
+              {/* Botón para aceptar el reto */}
+              <div className="text-center">
+                <button
+                  onClick={handleAcceptChallenge}
+                  className="bg-gradient-to-r from-purple-500 to-pink-500 text-white py-4 px-8 rounded-xl font-bold text-lg hover:from-purple-600 hover:to-pink-600 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
+                >
+                  ¿Aceptas el reto? 🎯
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* FASE 2: DESAFÍO ACEPTADO */}
+          {challenge && acceptedChallenge && !showResult && (
+            <div className="space-y-6">
+              {/* Challenge Info */}
               <div className="bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-xl p-4 animate-slide-in-right">
                 <div className="flex items-start gap-3">
                   <span className="text-2xl animate-pulse-glow">🎯</span>
@@ -188,36 +220,6 @@ const ChallengeModal = ({
                   </div>
                 </div>
               </div>
-
-              {/* Next Place - TERCERO */}
-              {challenge.next_place && (
-                <div className="bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-200 rounded-xl p-4">
-                  <div className="flex items-start gap-3">
-                    <span className="text-2xl">🗺️</span>
-                    <div className="flex-1">
-                      <h3 className="font-bold text-gray-800 mb-2">Siguiente Parada</h3>
-                      <p className="text-gray-700 text-sm leading-relaxed">
-                        Después de completar este desafío, tu próxima aventura será en: <strong>{challenge.next_place}</strong>
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Business Offer - CUARTO */}
-              {challenge.business_offer && (
-                <div className="bg-gradient-to-r from-orange-50 to-red-50 border border-orange-200 rounded-xl p-4">
-                  <div className="flex items-start gap-3">
-                    <span className="text-2xl">🛍️</span>
-                    <div className="flex-1">
-                      <h3 className="font-bold text-gray-800 mb-2">Oferta Especial</h3>
-                      <p className="text-gray-700 text-sm leading-relaxed">
-                        {challenge.business_offer}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
 
               {/* Challenge Details */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">

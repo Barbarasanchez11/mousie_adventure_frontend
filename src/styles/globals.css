@@ -109,6 +109,19 @@
   .custom-popup .overflow-y-auto::-webkit-scrollbar-thumb {
     @apply bg-purple-400 rounded-full hover:bg-purple-500;
   }
+
+  /* Scrollbar personalizado para la historia del desafío */
+  .story-scroll::-webkit-scrollbar {
+    @apply w-2;
+  }
+
+  .story-scroll::-webkit-scrollbar-track {
+    @apply bg-gray-100 rounded-full;
+  }
+
+  .story-scroll::-webkit-scrollbar-thumb {
+    @apply bg-purple-400 rounded-full hover:bg-purple-500;
+  }
   
   /* Animation classes */
   .animate-coin {

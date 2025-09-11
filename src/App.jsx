@@ -3,7 +3,6 @@ import HealthCheck from '@components/ui/HealthCheck/HealthCheck'
 import AdventureDisplay from '@components/ui/AdventureDisplay/AdventureDisplay'
 import GamificationPanel from '@components/ui/GamificationPanel/GamificationPanel'
 import RouteManager from '@components/ui/RouteManager/RouteManager'
-import InteractiveMap from '@components/ui/InteractiveMap/InteractiveMap'
 import { startAdventure } from '@services/api/adventure'
 
 function App() {
@@ -35,19 +34,6 @@ function App() {
             <RouteManager />
           </div>
 
-          {/* Sección del Mapa Interactivo con Chatbot */}
-          <div className="max-w-6xl mx-auto mb-8 sm:mb-12">
-            <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-6 sm:p-8">
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4 text-center">
-                🗺️ Mapa Interactivo de Madrid
-              </h2>
-              <InteractiveMap 
-                userLocation={adventure?.location}
-                childrenAges={[6, 8]}
-                className="h-96 w-full"
-              />
-            </div>
-          </div>
 
 
 

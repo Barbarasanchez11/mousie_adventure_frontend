@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import Navbar from '@components/ui/Navbar/Navbar'
 import HealthCheck from '@components/ui/HealthCheck/HealthCheck'
 import AdventureDisplay from '@components/ui/AdventureDisplay/AdventureDisplay'
 import GamificationPanel from '@components/ui/GamificationPanel/GamificationPanel'
@@ -17,6 +18,9 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50">
+      {/* Navbar */}
+      <Navbar />
+      
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 md:py-16 lg:py-20">
         <div className="text-center">
           {/* Header */}
@@ -31,12 +35,12 @@ function App() {
 
 
           {/* Sección del Mapa Interactivo */}
-          <div className="max-w-6xl mx-auto mb-8 sm:mb-12">
+          <div id="rutas" className="max-w-6xl mx-auto mb-8 sm:mb-12">
             <RouteManager />
           </div>
 
           {/* Sección del Mapa Interactivo con Chatbot */}
-          <div className="max-w-6xl mx-auto mb-8 sm:mb-12">
+          <div id="mapa" className="max-w-6xl mx-auto mb-8 sm:mb-12">
             <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-6 sm:p-8">
               <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4 text-center">
                 🗺️ Mapa Interactivo de Madrid
@@ -65,7 +69,7 @@ function App() {
 
 
           {/* Sección de Gamificación */}
-          <div className="max-w-4xl mx-auto mb-8 sm:mb-12">
+          <div id="gamificacion" className="max-w-4xl mx-auto mb-8 sm:mb-12">
             <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-6 sm:p-8">
               <GamificationPanel />
             </div>

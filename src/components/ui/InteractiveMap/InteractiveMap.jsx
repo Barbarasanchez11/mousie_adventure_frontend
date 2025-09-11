@@ -196,13 +196,6 @@ const InteractiveMap = ({
             >
             <Popup maxWidth={300} maxHeight={400} className="custom-popup">
               <div className="p-4 min-w-[280px] max-h-[350px] overflow-y-auto relative">
-                {/* Indicador de scroll */}
-                <div className="absolute top-2 right-2 text-xs text-gray-400 bg-white/80 rounded-full px-2 py-1 shadow-sm z-10">
-                  📜 Scroll
-                </div>
-                
-                {/* Gradiente inferior para indicar más contenido */}
-                <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-white to-transparent pointer-events-none z-10"></div>
                 {/* Header del popup */}
                 <div className="flex items-center gap-3 mb-3">
                   <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold text-lg">
@@ -236,10 +229,6 @@ const InteractiveMap = ({
                     <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
                     <span>Orden: {index + 1} de {routePlaces.length}</span>
                   </div>
-                  <div className="flex items-center gap-2 text-xs text-gray-600">
-                    <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-                    <span>Coordenadas: {place.latitude.toFixed(4)}, {place.longitude.toFixed(4)}</span>
-                  </div>
                 </div>
 
                 {/* Desafío */}
@@ -268,28 +257,6 @@ const InteractiveMap = ({
                   </div>
                 )}
 
-                {/* Botón de acción */}
-                <div className="flex gap-2 pt-2 border-t border-gray-200 pb-2">
-                  <button
-                    onClick={() => {
-                      if (onPlaceSelect) {
-                        onPlaceSelect(place)
-                      }
-                    }}
-                    className="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white text-sm font-medium py-2 px-3 rounded-lg hover:from-purple-600 hover:to-pink-600 transition-all duration-200 shadow-sm"
-                  >
-                    Ver detalles
-                  </button>
-                  <button
-                    onClick={() => {
-                      // Aquí podrías añadir lógica para marcar como visitado
-                      alert(`¡Has visitado ${place.name}!`)
-                    }}
-                    className="bg-green-500 text-white text-sm font-medium py-2 px-3 rounded-lg hover:bg-green-600 transition-colors shadow-sm"
-                  >
-                    ✅ Visitar
-                  </button>
-                </div>
               </div>
             </Popup>
           </Marker>

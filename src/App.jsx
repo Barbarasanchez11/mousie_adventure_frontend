@@ -22,7 +22,7 @@ function App() {
           {/* Header */}
           <div className="mb-8 sm:mb-12">
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display text-primary-600 mb-4 sm:mb-6">
-              🐭 Ratoncito Pérez Adventure
+              🐭 Mousie Adventure
             </h1>
             <p className="text-base sm:text-lg md:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
               La aventura familiar con el Ratoncito Pérez en Madrid

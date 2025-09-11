@@ -22,14 +22,6 @@ const RouteManager = () => {
   // Hook para obtener la ubicación del usuario
   const { location, loading: locationLoading, error: locationError } = useGeolocation()
 
-  // Efecto para actualizar automáticamente cuando cambie la ubicación
-  React.useEffect(() => {
-    // Forzar re-render cuando cambie la ubicación para actualizar botones de proximidad
-    if (location) {
-      console.log('📍 Ubicación actualizada:', location.latitude, location.longitude)
-    }
-  }, [location])
-
   // Generar una nueva ruta usando lugares reales de Madrid
   const handleGenerateRoute = async () => {
     setLoading(true)
@@ -97,16 +89,18 @@ const RouteManager = () => {
     return R * c // Distancia en metros
   }
 
-  // Verificar si el usuario está cerca de un lugar (50 metros)
+  // Verificar si el usuario está cerca de un lugar (100 metros)
   const isNearPlace = (place) => {
     if (!location || !place.latitude || !place.longitude) return false
+    
     const distance = calculateDistance(
-      location.latitude, 
-      location.longitude, 
-      place.latitude, 
+      location.latitude,
+      location.longitude,
+      place.latitude,
       place.longitude
     )
-    return distance <= 50 // 50 metros de proximidad
+    
+    return distance <= 100 // 100 metros de proximidad
   }
 
   // Manejar inicio de desafío
@@ -386,8 +380,8 @@ const RouteManager = () => {
                           </button>
                         )}
                         
-                        {/* Botón para el lugar actual (siempre visible) */}
-                        {isCurrent && !isCompleted && (
+                        {/* Botón para el primer lugar (siempre visible) */}
+                        {index === 0 && !isCompleted && (
                           <button
                             onClick={(e) => {
                               e.stopPropagation()
@@ -400,22 +394,22 @@ const RouteManager = () => {
                           </button>
                         )}
                         
-                        {/* Botón para lugares no actuales (solo cuando esté cerca) */}
-                        {!isCurrent && !isCompleted && isNearPlace(place) && (
+                        {/* Botón para otros lugares (solo cuando esté cerca) */}
+                        {index > 0 && !isCompleted && isNearPlace(place) && (
                           <button
                             onClick={(e) => {
                               e.stopPropagation()
                               handleStartChallenge(place)
                             }}
-                            className="bg-orange-500 hover:bg-orange-600 text-white py-1.5 rounded-lg font-medium transition-colors flex-1 min-w-0 px-0.5 text-[10px] xs:px-2 xs:py-1 xs:text-xs"
+                            className="bg-blue-500 hover:bg-blue-600 text-white py-1.5 rounded-lg font-medium transition-colors flex-1 min-w-0 px-0.5 text-[10px] xs:px-2 xs:py-1 xs:text-xs"
                           >
                             <span className="block xs:hidden">🎯 Desafío</span>
                             <span className="hidden xs:block">🎯 Iniciar Desafío</span>
                           </button>
                         )}
                         
-                        {/* Botón de proximidad para lugares no actuales */}
-                        {!isCurrent && !isCompleted && !isNearPlace(place) && (
+                        {/* Botón "Acércate al lugar" para lugares no cercanos */}
+                        {index > 0 && !isCompleted && !isNearPlace(place) && (
                           <button
                             disabled
                             className="bg-gray-300 text-gray-500 py-1.5 rounded-lg font-medium transition-colors flex-1 min-w-0 px-0.5 text-[10px] xs:px-2 xs:py-1 xs:text-xs cursor-not-allowed"

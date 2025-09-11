@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { MapContainer, TileLayer, Marker, Popup, Polyline, useMap } from 'react-leaflet'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
-import ChatbotButton from '../Chatbot/ChatbotButton.jsx'
 
 // Fix para los iconos de Leaflet
 delete L.Icon.Default.prototype._getIconUrl
@@ -338,12 +337,6 @@ const InteractiveMap = ({
         </div>
       </div>
 
-      {/* Botón flotante del chatbot */}
-      <ChatbotButton
-        coordinates={userLocation}
-        placeName={selectedPlace?.name || 'Madrid'}
-        childrenAges={childrenAges}
-      />
     </div>
   )
 }

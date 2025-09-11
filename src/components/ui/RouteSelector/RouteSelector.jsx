@@ -7,25 +7,12 @@ const RouteSelector = ({ onRouteSelect, userLocation, childrenAges = [5, 8] }) =
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [customRoute, setCustomRoute] = useState(null)
-  const [backendStatus, setBackendStatus] = useState(null)
 
   // Cargar rutas temáticas al montar el componente
   useEffect(() => {
     loadThematicRoutes()
-    testBackendConnection()
   }, [])
 
-  const testBackendConnection = async () => {
-    try {
-      const status = await guideDataService.testBackendConnection()
-      setBackendStatus(status)
-    } catch (error) {
-      setBackendStatus({
-        success: false,
-        message: 'Error probando conexión con el backend'
-      })
-    }
-  }
 
   const loadThematicRoutes = async () => {
     setLoading(true)
@@ -141,35 +128,6 @@ const RouteSelector = ({ onRouteSelect, userLocation, childrenAges = [5, 8] }) =
         </p>
       </div>
 
-      {/* Backend Status */}
-      {backendStatus && (
-        <div className={`border rounded-lg p-4 mb-6 ${
-          backendStatus.success 
-            ? 'bg-green-50 border-green-200' 
-            : 'bg-yellow-50 border-yellow-200'
-        }`}>
-          <div className="flex items-center">
-            <span className={`text-lg mr-2 ${
-              backendStatus.success ? 'text-green-500' : 'text-yellow-500'
-            }`}>
-              {backendStatus.success ? '✅' : '⚠️'}
-            </span>
-            <div>
-              <p className={`font-medium ${
-                backendStatus.success ? 'text-green-800' : 'text-yellow-800'
-              }`}>
-                {backendStatus.success ? 'Backend Conectado' : 'Backend No Disponible'}
-              </p>
-              <p className={`text-sm ${
-                backendStatus.success ? 'text-green-600' : 'text-yellow-600'
-              }`}>
-                {backendStatus.message}
-                {backendStatus.placesFound && ` (${backendStatus.placesFound} lugares encontrados)`}
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Error Message */}
       {error && (

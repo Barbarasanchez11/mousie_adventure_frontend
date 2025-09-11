@@ -17,7 +17,7 @@ const ChatbotButton = ({ coordinates, placeName, childrenAges = [6, 8] }) => {
       {/* Botón flotante del chatbot en esquina inferior derecha */}
       <button
         onClick={handleOpenChat}
-        className="fixed bottom-6 right-6 bg-gradient-to-r from-purple-500 to-pink-500 text-white p-4 rounded-full shadow-2xl hover:from-purple-600 hover:to-pink-600 transition-all duration-300 transform hover:scale-110 z-50 chatbot-button"
+        className="fixed bottom-6 right-6 bg-gradient-to-r from-purple-500 to-pink-500 text-white p-4 rounded-full shadow-2xl hover:from-purple-600 hover:to-pink-600 transition-all duration-300 transform hover:scale-110 z-[9997] chatbot-button"
         title="Pregunta al Ratoncito Pérez"
       >
         <span className="text-3xl animate-bounce">🐭</span>

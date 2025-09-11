@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import InteractiveMap from '@components/ui/InteractiveMap/InteractiveMap'
 import { generateRoute } from '@services/api/route'
+import { guideService } from '@services/api/guide'
+import { getMadridPlacesForMap, getMadridRoutesForMap, MADRID_PLACES } from '@data/madridPlaces'
 import { useGeolocation } from '@hooks/location/useGeolocation'
 
 // Componente para gestionar rutas y mostrar el mapa
@@ -9,33 +11,51 @@ const RouteManager = () => {
   const [selectedPlace, setSelectedPlace] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+  const [completedPlaces, setCompletedPlaces] = useState(new Set()) // Lugares completados
+  const [currentPlaceIndex, setCurrentPlaceIndex] = useState(0) // Lugar actual
   
   // Hook para obtener la ubicación del usuario
   const { location, loading: locationLoading, error: locationError } = useGeolocation()
 
-  // Generar una nueva ruta
+  // Generar una nueva ruta usando lugares reales de Madrid
   const handleGenerateRoute = async () => {
     setLoading(true)
     setError(null)
     
     try {
-      // Si no hay ubicación del usuario, usar Madrid por defecto
-      const startLocation = location || {
-        latitude: 40.4168,
-        longitude: -3.7038
-      }
-
-      const response = await generateRoute(startLocation.latitude, startLocation.longitude, [5, 8]) // Edades de ejemplo
+      // Usar lugares reales de Madrid
+      const madridPlaces = getMadridPlacesForMap()
+      const madridRoutes = getMadridRoutesForMap()
       
-      if (response.success) {
-        setRoute(response.data)
-        setSelectedPlace(null)
-      } else {
-        setError(response.message || 'Error al generar la ruta')
+      // Crear una ruta simulada con lugares reales
+      const simulatedRoute = {
+        route_id: 'madrid_real_route_' + Date.now(),
+        total_places: madridPlaces.length,
+        estimated_duration: '2-3 horas',
+        difficulty: 'Fácil',
+        places: madridPlaces,
+        routes: madridRoutes
       }
+      
+      setRoute(simulatedRoute)
+      setSelectedPlace(null)
+      setCompletedPlaces(new Set())
+      setCurrentPlaceIndex(0)
+      
+      // Intentar conectar con el backend para obtener guías reales
+      try {
+        const guideResponse = await guideService.getMadridRoute([5, 8])
+        if (guideResponse.success) {
+          console.log('Guías del backend obtenidas:', guideResponse.data)
+          // Aquí podrías integrar las guías del backend
+        }
+      } catch (guideError) {
+        console.log('Usando datos locales de Madrid:', guideError.message)
+      }
+      
     } catch (err) {
       console.error('Error al generar ruta:', err)
-      setError('Error de conexión al generar la ruta')
+      setError('Error al generar la ruta de Madrid')
     } finally {
       setLoading(false)
     }
@@ -44,6 +64,43 @@ const RouteManager = () => {
   // Manejar selección de un lugar
   const handlePlaceSelect = (place) => {
     setSelectedPlace(place)
+  }
+
+  // Marcar un lugar como completado
+  const handleCompletePlace = (placeIndex) => {
+    setCompletedPlaces(prev => new Set([...prev, placeIndex]))
+    
+    // Si es el lugar actual, avanzar al siguiente
+    if (placeIndex === currentPlaceIndex && placeIndex < (route?.places.length - 1)) {
+      setCurrentPlaceIndex(placeIndex + 1)
+    }
+  }
+
+  // Marcar un lugar como no completado
+  const handleUncompletePlace = (placeIndex) => {
+    setCompletedPlaces(prev => {
+      const newSet = new Set(prev)
+      newSet.delete(placeIndex)
+      return newSet
+    })
+  }
+
+  // Calcular progreso de la ruta
+  const getRouteProgress = () => {
+    if (!route?.places) return 0
+    return Math.round((completedPlaces.size / route.places.length) * 100)
+  }
+
+  // Obtener el siguiente lugar a visitar
+  const getNextPlace = () => {
+    if (!route?.places) return null
+    return route.places[currentPlaceIndex]
+  }
+
+  // Obtener lugares completados
+  const getCompletedPlaces = () => {
+    if (!route?.places) return []
+    return Array.from(completedPlaces).map(index => route.places[index])
   }
 
   // Cargar ruta de ejemplo al montar el componente
@@ -98,6 +155,48 @@ const RouteManager = () => {
         )}
       </div>
 
+      {/* Barra de progreso de la ruta */}
+      {route && (
+        <div className="mb-6 bg-gray-50 rounded-lg p-4">
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="text-lg font-semibold text-gray-800">
+              🎯 Progreso de la Ruta
+            </h3>
+            <span className="text-sm font-medium text-gray-600">
+              {completedPlaces.size} de {route.places.length} lugares completados
+            </span>
+          </div>
+          
+          {/* Barra de progreso */}
+          <div className="w-full bg-gray-200 rounded-full h-3 mb-3">
+            <div 
+              className="bg-gradient-to-r from-primary-500 to-secondary-500 h-3 rounded-full transition-all duration-500"
+              style={{ width: `${getRouteProgress()}%` }}
+            ></div>
+          </div>
+          
+          {/* Porcentaje */}
+          <div className="text-center">
+            <span className="text-2xl font-bold text-primary-600">
+              {getRouteProgress()}%
+            </span>
+            <span className="text-sm text-gray-600 ml-2">completado</span>
+          </div>
+
+          {/* Próximo lugar */}
+          {getNextPlace() && (
+            <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+              <h4 className="font-semibold text-blue-800 mb-1">
+                🎯 Próximo lugar a visitar:
+              </h4>
+              <p className="text-blue-700">
+                {getNextPlace().name || `Lugar ${currentPlaceIndex + 1}`}
+              </p>
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Mapa */}
       <div className="mb-6">
         <InteractiveMap
@@ -109,6 +208,32 @@ const RouteManager = () => {
           className="h-96 w-full"
         />
       </div>
+
+      {/* Información de rutas reales */}
+      {route?.routes && route.routes.length > 0 && (
+        <div className="mb-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+          <h3 className="text-lg font-semibold text-blue-800 mb-3">
+            🗺️ Rutas Disponibles en Madrid
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {route.routes.slice(0, 6).map((routeItem, index) => (
+              <div key={index} className="bg-white rounded-lg p-3 border border-blue-100">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="text-blue-600">📍</span>
+                  <span className="font-medium text-gray-800">{routeItem.from.name}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-blue-600">🎯</span>
+                  <span className="text-gray-600">{routeItem.to.name}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+          <p className="text-sm text-blue-600 mt-2">
+            Total de {route.routes.length} conexiones disponibles entre lugares de Madrid
+          </p>
+        </div>
+      )}
 
       {/* Información de la ruta */}
       {route && (
@@ -152,50 +277,120 @@ const RouteManager = () => {
             📍 Lugares de la Ruta ({route.places.length})
           </h3>
           <div className="space-y-3">
-            {route.places.map((place, index) => (
-              <div
-                key={place.id || index}
-                className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
-                  selectedPlace === place
-                    ? 'border-primary-500 bg-primary-50'
-                    : 'border-gray-200 bg-gray-50 hover:border-gray-300'
-                }`}
-                onClick={() => handlePlaceSelect(place)}
-              >
-                <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0">
-                    <div className="w-8 h-8 bg-primary-500 text-white rounded-full flex items-center justify-center font-bold text-sm">
-                      {index + 1}
+            {route.places.map((place, index) => {
+              const isCompleted = completedPlaces.has(index)
+              const isCurrent = index === currentPlaceIndex
+              const isSelected = selectedPlace === place
+              
+              return (
+                <div
+                  key={place.id || index}
+                  className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
+                    isSelected
+                      ? 'border-primary-500 bg-primary-50'
+                      : isCompleted
+                      ? 'border-green-500 bg-green-50'
+                      : isCurrent
+                      ? 'border-blue-500 bg-blue-50'
+                      : 'border-gray-200 bg-gray-50 hover:border-gray-300'
+                  }`}
+                  onClick={() => handlePlaceSelect(place)}
+                >
+                  <div className="flex items-start gap-4">
+                    <div className="flex-shrink-0">
+                      <div className={`w-8 h-8 text-white rounded-full flex items-center justify-center font-bold text-sm ${
+                        isCompleted
+                          ? 'bg-green-500'
+                          : isCurrent
+                          ? 'bg-blue-500'
+                          : 'bg-primary-500'
+                      }`}>
+                        {isCompleted ? '✅' : index + 1}
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="font-semibold text-gray-800 mb-1">
-                      {place.name || `Lugar ${index + 1}`}
-                    </h4>
-                    {place.description && (
-                      <p className="text-sm text-gray-600 mb-2">
-                        {place.description}
-                      </p>
-                    )}
-                    <div className="flex flex-wrap gap-2 text-xs">
-                      <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded">
-                        📍 {place.latitude.toFixed(4)}, {place.longitude.toFixed(4)}
-                      </span>
-                      {place.challenge && (
-                        <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded">
-                          🎯 {place.challenge}
-                        </span>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between mb-1">
+                        <h4 className="font-semibold text-gray-800">
+                          {place.name || `Lugar ${index + 1}`}
+                        </h4>
+                        <div className="flex items-center gap-2">
+                          {isCompleted && (
+                            <span className="text-green-600 text-sm font-medium">
+                              ✅ Completado
+                            </span>
+                          )}
+                          {isCurrent && !isCompleted && (
+                            <span className="text-blue-600 text-sm font-medium">
+                              🎯 Actual
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      
+                      {place.description && (
+                        <p className="text-sm text-gray-600 mb-2">
+                          {place.description}
+                        </p>
                       )}
-                      {place.reward && (
-                        <span className="bg-green-100 text-green-800 px-2 py-1 rounded">
-                          🏆 {place.reward}
+                      
+                      <div className="flex flex-wrap gap-2 text-xs mb-3">
+                        <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded">
+                          📍 {place.latitude.toFixed(4)}, {place.longitude.toFixed(4)}
                         </span>
-                      )}
+                        {place.challenge && (
+                          <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded">
+                            🎯 {place.challenge}
+                          </span>
+                        )}
+                        {place.reward && (
+                          <span className="bg-green-100 text-green-800 px-2 py-1 rounded">
+                            🏆 {place.reward}
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Botones de acción */}
+                      <div className="flex gap-2">
+                        {!isCompleted ? (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              handleCompletePlace(index)
+                            }}
+                            className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm font-medium transition-colors"
+                          >
+                            ✅ Marcar como completado
+                          </button>
+                        ) : (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              handleUncompletePlace(index)
+                            }}
+                            className="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded text-sm font-medium transition-colors"
+                          >
+                            ↩️ Desmarcar
+                          </button>
+                        )}
+                        
+                        {isCurrent && !isCompleted && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              // Aquí podrías añadir lógica para iniciar el desafío
+                              alert('¡Iniciando desafío!')
+                            }}
+                            className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm font-medium transition-colors"
+                          >
+                            🎯 Iniciar Desafío
+                          </button>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
         </div>
       )}

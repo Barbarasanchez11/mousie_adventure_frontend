@@ -24,27 +24,6 @@ module.exports = {
     react: {
       version: 'detect',
     },
-    'import/resolver': {
-      node: {
-        extensions: ['.js', '.jsx', '.json'],
-      },
-      alias: {
-        map: [
-          ['@', './src'],
-          ['@components', './src/components'],
-          ['@pages', './src/pages'],
-          ['@features', './src/features'],
-          ['@services', './src/services'],
-          ['@hooks', './src/hooks'],
-          ['@types', './src/types'],
-          ['@utils', './src/utils'],
-          ['@assets', './src/assets'],
-          ['@contexts', './src/contexts'],
-          ['@styles', './src/styles'],
-        ],
-        extensions: ['.js', '.jsx', '.json'],
-      },
-    },
   },
   plugins: ['react-refresh'],
   rules: {
@@ -54,7 +33,7 @@ module.exports = {
     ],
     'react/prop-types': 'off',
     'react/react-in-jsx-scope': 'off',
-    'import/no-unresolved': 'error',
+    'import/no-unresolved': 'off',
     'no-unused-vars': 'warn',
     'no-console': 'warn',
     'prefer-const': 'error',

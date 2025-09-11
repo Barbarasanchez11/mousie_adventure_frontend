@@ -47,7 +47,8 @@ export default defineConfig({
       '@utils': resolve(__dirname, './src/utils'),
       '@assets': resolve(__dirname, './src/assets'),
       '@contexts': resolve(__dirname, './src/contexts'),
-      '@styles': resolve(__dirname, './src/styles')
+      '@styles': resolve(__dirname, './src/styles'),
+      '@data': resolve(__dirname, './src/data')
     }
   },
   server: {

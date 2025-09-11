@@ -5,7 +5,6 @@ import AdventureTest from '@components/ui/AdventureTest/AdventureTest'
 import AdventureDisplay from '@components/ui/AdventureDisplay/AdventureDisplay'
 import ChatInterface from '@components/ui/ChatInterface/ChatInterface'
 import GamificationPanel from '@components/ui/GamificationPanel/GamificationPanel'
-import BackendTest from '@components/ui/BackendTest/BackendTest'
 import RouteManager from '@components/ui/RouteManager/RouteManager'
 import InteractiveMap from '@components/ui/InteractiveMap/InteractiveMap'
 import { startAdventure } from '@services/api/adventure'
@@ -92,10 +91,6 @@ function App() {
             </p>
           </div>
 
-          {/* Sección de Pruebas del Backend */}
-          <div className="max-w-6xl mx-auto mb-8 sm:mb-12">
-            <BackendTest />
-          </div>
 
           {/* Sección del Mapa Interactivo */}
           <div className="max-w-6xl mx-auto mb-8 sm:mb-12">

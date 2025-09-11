@@ -161,24 +161,11 @@ const ChallengeModal = ({
 
           {challenge && !showResult && (
             <div className="space-y-6">
-              {/* Challenge Info */}
-              <div className="bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-xl p-4">
-                <div className="flex items-start gap-3">
-                  <span className="text-2xl">🎯</span>
-                  <div className="flex-1">
-                    <h3 className="font-bold text-gray-800 mb-2">Tu Desafío</h3>
-                    <p className="text-gray-700 text-lg leading-relaxed">
-                      {challenge.challenge}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Story from Backend */}
+              {/* Story from Backend - PRIMERO */}
               {challenge.story && (
-                <div className="bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-xl p-4">
+                <div className="bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-xl p-4 animate-fade-in">
                   <div className="flex items-start gap-3">
-                    <span className="text-2xl">🐭</span>
+                    <span className="text-2xl animate-bounce">🐭</span>
                     <div className="flex-1">
                       <h3 className="font-bold text-gray-800 mb-2">Historia del Ratoncito Pérez</h3>
                       <p className="text-gray-700 text-sm leading-relaxed">
@@ -189,22 +176,20 @@ const ChallengeModal = ({
                 </div>
               )}
 
-              {/* Reward Preview */}
-              {challenge.reward && (
-                <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl p-4">
-                  <div className="flex items-start gap-3">
-                    <span className="text-2xl">🏆</span>
-                    <div className="flex-1">
-                      <h3 className="font-bold text-gray-800 mb-2">Recompensa</h3>
-                      <p className="text-gray-700 text-sm leading-relaxed">
-                        {challenge.reward}
-                      </p>
-                    </div>
+              {/* Challenge Info - SEGUNDO */}
+              <div className="bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-xl p-4 animate-slide-in-right">
+                <div className="flex items-start gap-3">
+                  <span className="text-2xl animate-pulse-glow">🎯</span>
+                  <div className="flex-1">
+                    <h3 className="font-bold text-gray-800 mb-2">Tu Desafío</h3>
+                    <p className="text-gray-700 text-lg leading-relaxed">
+                      {challenge.challenge}
+                    </p>
                   </div>
                 </div>
-              )}
+              </div>
 
-              {/* Next Place */}
+              {/* Next Place - TERCERO */}
               {challenge.next_place && (
                 <div className="bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-200 rounded-xl p-4">
                   <div className="flex items-start gap-3">
@@ -219,7 +204,7 @@ const ChallengeModal = ({
                 </div>
               )}
 
-              {/* Business Offer */}
+              {/* Business Offer - CUARTO */}
               {challenge.business_offer && (
                 <div className="bg-gradient-to-r from-orange-50 to-red-50 border border-orange-200 rounded-xl p-4">
                   <div className="flex items-start gap-3">
@@ -322,17 +307,30 @@ const ChallengeModal = ({
                 )}
               </div>
 
-              {/* Rewards */}
-              {result.is_correct && challenge && (
-                <div className="bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-xl p-4">
+              {/* Rewards from Backend */}
+              {result.is_correct && challenge && challenge.reward && (
+                <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-xl p-4">
                   <h4 className="font-bold text-gray-800 mb-3 flex items-center gap-2">
                     <span>🏆</span>
-                    Recompensas Obtenidas
+                    Recompensa del Ratoncito Pérez
+                  </h4>
+                  <p className="text-gray-700 text-sm leading-relaxed mb-3">
+                    {challenge.reward}
+                  </p>
+                </div>
+              )}
+
+              {/* Additional Rewards */}
+              {result.is_correct && challenge && challenge.rewards && challenge.rewards.length > 0 && (
+                <div className="bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-xl p-4">
+                  <h4 className="font-bold text-gray-800 mb-3 flex items-center gap-2">
+                    <span>✨</span>
+                    Tesoros Adicionales
                   </h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                     {challenge.rewards.map((reward, index) => (
                       <div key={index} className="flex items-center gap-2 text-sm text-gray-700">
-                        <span>✨</span>
+                        <span>💎</span>
                         <span>{reward}</span>
                       </div>
                     ))}

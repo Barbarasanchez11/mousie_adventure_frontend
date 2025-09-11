@@ -112,15 +112,23 @@
   
   /* Animation classes */
   .animate-coin {
-    @apply animate-coin-spin;
+    animation: coin-spin 1s ease-in-out;
   }
   
   .animate-fade-in {
-    @apply animate-fade-in;
+    animation: fade-in 0.5s ease-out;
   }
   
   .animate-slide-up {
-    @apply animate-slide-up;
+    animation: slide-up 0.6s ease-out;
+  }
+  
+  .animate-slide-in-right {
+    animation: slide-in-right 0.6s ease-out;
+  }
+  
+  .animate-pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
   }
   
   /* Loading states */
@@ -184,6 +192,26 @@
   100% { 
     transform: translateY(0); 
     opacity: 1; 
+  }
+}
+
+@keyframes slide-in-right {
+  0% { 
+    transform: translateX(20px); 
+    opacity: 0; 
+  }
+  100% { 
+    transform: translateX(0); 
+    opacity: 1; 
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 5px rgba(139, 92, 246, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.6);
   }
 }
 

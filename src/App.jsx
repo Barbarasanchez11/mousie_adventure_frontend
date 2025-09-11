@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import LocationButton from '@components/ui/LocationButton/LocationButton'
 import HealthCheck from '@components/ui/HealthCheck/HealthCheck'
 import AdventureTest from '@components/ui/AdventureTest/AdventureTest'
 import AdventureDisplay from '@components/ui/AdventureDisplay/AdventureDisplay'
@@ -23,27 +22,6 @@ function App() {
   const [chatLoading, setChatLoading] = useState(false)
   const [chatError, setChatError] = useState(null)
 
-  // Función para manejar cuando se obtiene la ubicación
-  const handleLocationFound = async (location) => {
-    setAdventureLoading(true)
-    setAdventureError(null)
-
-    try {
-      // Simular edades de niños para la aventura
-      const childAges = [5, 8] // Edades de ejemplo
-      const response = await startAdventure(location, childAges)
-      
-      if (response.success) {
-        setAdventure(response.data)
-      } else {
-        setAdventureError(response.message)
-      }
-    } catch (error) {
-      setAdventureError('No se pudo iniciar la aventura')
-    } finally {
-      setAdventureLoading(false)
-    }
-  }
 
   // Función para enviar una pregunta al Ratoncito Pérez
   const handleSendMessage = async (question) => {
@@ -111,15 +89,6 @@ function App() {
             </div>
           </div>
 
-          {/* Sección de Ubicación */}
-          <div className="max-w-md mx-auto mb-8 sm:mb-12">
-            <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-6 sm:p-8">
-              <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4 text-center">
-                📍 Obtener Ubicación
-              </h2>
-              <LocationButton onLocationFound={handleLocationFound} />
-            </div>
-          </div>
 
           {/* Sección de Prueba de Aventuras */}
           <div className="max-w-md mx-auto mb-8 sm:mb-12">

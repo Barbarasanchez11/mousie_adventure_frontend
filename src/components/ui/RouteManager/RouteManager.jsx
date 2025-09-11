@@ -73,6 +73,34 @@ const RouteManager = () => {
     setCurrentPlaceIndex(0)
   }
 
+  // Función para calcular distancia entre dos puntos (en metros)
+  const calculateDistance = (lat1, lon1, lat2, lon2) => {
+    const R = 6371e3 // Radio de la Tierra en metros
+    const φ1 = lat1 * Math.PI/180
+    const φ2 = lat2 * Math.PI/180
+    const Δφ = (lat2-lat1) * Math.PI/180
+    const Δλ = (lon2-lon1) * Math.PI/180
+
+    const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+              Math.cos(φ1) * Math.cos(φ2) *
+              Math.sin(Δλ/2) * Math.sin(Δλ/2)
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
+
+    return R * c // Distancia en metros
+  }
+
+  // Verificar si el usuario está cerca de un lugar (50 metros)
+  const isNearPlace = (place) => {
+    if (!location) return false
+    const distance = calculateDistance(
+      location.latitude,
+      location.longitude,
+      place.latitude,
+      place.longitude
+    )
+    return distance <= 50 // 50 metros de proximidad
+  }
+
   // Manejar inicio de desafío
   const handleStartChallenge = (place) => {
     setChallengePlace(place)
@@ -350,6 +378,7 @@ const RouteManager = () => {
                           </button>
                         )}
                         
+                        {/* Botón de desafío - Solo para el lugar actual */}
                         {isCurrent && !isCompleted && (
                           <button
                             onClick={(e) => {
@@ -360,6 +389,31 @@ const RouteManager = () => {
                           >
                             <span className="block xs:hidden">🎯 Desafío</span>
                             <span className="hidden xs:block">🎯 Iniciar Desafío</span>
+                          </button>
+                        )}
+                        
+                        {/* Botón de proximidad - Para lugares no actuales */}
+                        {!isCurrent && !isCompleted && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              if (isNearPlace(place)) {
+                                handleStartChallenge(place)
+                              }
+                            }}
+                            disabled={!isNearPlace(place)}
+                            className={`py-1.5 rounded-lg font-medium transition-colors flex-1 min-w-0 px-0.5 text-[10px] xs:px-2 xs:py-1 xs:text-xs ${
+                              isNearPlace(place)
+                                ? 'bg-blue-500 hover:bg-blue-600 text-white'
+                                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                            }`}
+                          >
+                            <span className="block xs:hidden">
+                              {isNearPlace(place) ? '🎯 Desafío' : '📍 Acércate'}
+                            </span>
+                            <span className="hidden xs:block">
+                              {isNearPlace(place) ? '🎯 Iniciar Desafío' : '📍 Acércate al lugar'}
+                            </span>
                           </button>
                         )}
                       </div>

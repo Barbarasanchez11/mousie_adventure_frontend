@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: mousie-adventure-frontend
+    env: static
+    buildCommand: npm run build
+    staticPublishPath: ./dist
+    headers:
+      - path: /assets/*
+        name: Content-Type
+        value: text/css
+      - path: /assets/*.css
+        name: Content-Type
+        value: text/css
+      - path: /assets/*.js
+        name: Content-Type
+        value: application/javascript
+      - path: /assets/*.map
+        name: Content-Type
+        value: application/json

@@ -59,12 +59,13 @@ export default defineConfig({
       'localhost',
       '127.0.0.1',
       'mousie-adventure-frontend.onrender.com',
-      'mousie-adveture-frontend.onrender.com' // Por si hay un typo en el nombre
+      'mousie-adventure-frontend.onrender.com' 
     ]
   },
   build: {
     outDir: 'dist',
     sourcemap: true,
+    publicDir: 'public',
     rollupOptions: {
       output: {
         manualChunks: {
@@ -83,7 +84,7 @@ export default defineConfig({
       'localhost',
       '127.0.0.1',
       'mousie-adventure-frontend.onrender.com',
-      'mousie-adveture-frontend.onrender.com'
+      'mousie-adventure-frontend.onrender.com'
     ]
   },
   define: {

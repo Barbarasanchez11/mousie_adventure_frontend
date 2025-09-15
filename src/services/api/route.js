@@ -3,7 +3,7 @@ import { apiRequest } from './config.js'
 
 class RatoncitoAdventure {
   constructor() {
-    this.apiBase = 'http://localhost:8000'
+    this.apiBase = import.meta.env.VITE_API_BASE_URL || 'https://mousie-adventure.onrender.com'
     this.currentLocation = null
     this.currentRoute = null
     this.familyId = null

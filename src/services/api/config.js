@@ -1,7 +1,7 @@
 // config.js - Configuración de API corregida
 
 const API_CONFIG = {
-  baseURL: 'http://localhost:8000', 
+  baseURL: import.meta.env.VITE_API_BASE_URL || 'https://mousie-adventure.onrender.com', 
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',

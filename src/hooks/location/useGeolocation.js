@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 
 export const useGeolocation = () => {
-  const [location, setLocation] = useState(null) /
+  const [location, setLocation] = useState(null) 
   const [loading, setLoading] = useState(false) 
   const [error, setError] = useState(null)
 

@@ -54,7 +54,13 @@ export default defineConfig({
   server: {
     port: 3000,
     host: true,
-    open: true
+    open: true,
+    allowedHosts: [
+      'localhost',
+      '127.0.0.1',
+      'mousie-adventure-frontend.onrender.com',
+      'mousie-adveture-frontend.onrender.com' // Por si hay un typo en el nombre
+    ]
   },
   build: {
     outDir: 'dist',
@@ -69,6 +75,16 @@ export default defineConfig({
         }
       }
     }
+  },
+  preview: {
+    port: 3000,
+    host: true,
+    allowedHosts: [
+      'localhost',
+      '127.0.0.1',
+      'mousie-adventure-frontend.onrender.com',
+      'mousie-adveture-frontend.onrender.com'
+    ]
   },
   define: {
     __APP_VERSION__: JSON.stringify(process.env.npm_package_version)
